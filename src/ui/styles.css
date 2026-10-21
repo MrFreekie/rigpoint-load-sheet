@@ -1348,3 +1348,16 @@ fieldset.lock[disabled] .row-actions {
   display: flex;
   gap: 0.5rem;
 }
+
+.row-note {
+  grid-column: 2 / -1;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+@container zone (max-width: 34rem) {
+  .row-note {
+    grid-column: 1 / -1;
+  }
+}

@@ -109,6 +109,8 @@ function RowEditor({ zone, index, count, row, res, contingencyLabel, dispatch }:
   const snap = row.snapshot;
   const perMetre = snap?.per === 'm';
   const notInLibrary = row.item !== null && !libraryByName.has(row.item);
+  // How the library figure is meant to be used, e.g. a 2-fall chain is weighed per metre of HOL.
+  const weightNote = row.item ? (libraryByName.get(row.item)?.weight_note ?? null) : null;
 
   // Keep keyboard focus on the row that moved, so it can be moved again straight away.
   const move = (delta: -1 | 1) => {
@@ -220,6 +222,12 @@ function RowEditor({ zone, index, count, row, res, contingencyLabel, dispatch }:
           <dd>{res.used === null ? (row.item ? 'not checked' : '–') : <TrafficLight used={res.used} light={res.light} />}</dd>
         </div>
       </dl>
+      {weightNote ? (
+        <p className="row-note">
+          <span aria-hidden="true">ⓘ </span>
+          {weightNote}
+        </p>
+      ) : null}
     </li>
   );
 }

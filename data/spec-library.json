@@ -1,6 +1,6 @@
 {
   "format": "loadsheet-spec/1",
-  "spec_version": "2026-10-21.2",
+  "spec_version": "2026-10-21.3",
   "units": {
     "kg": "kilograms (per metre when per = m)",
     "swl_kg": "kilograms"
@@ -425,7 +425,7 @@
       "kg": 2.8,
       "per": "m",
       "swl_kg": 2000,
-      "weight_note": null,
+      "weight_note": "Per metre of height of lift (HOL), not per metre of chain: 2 falls × 1.40 kg/m. Enter the HOL in metres as the length.",
       "source": null,
       "verified": null
     },
