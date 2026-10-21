@@ -1,0 +1,326 @@
+/* Load Sheet print styles (BRIEF.md section 10).
+   The sheet is styled in mm and pt with fixed black-on-white colours, so it prints the
+   same whatever the screen theme. It is laid out off-screen at all times so it can be
+   measured and scaled to one page, and only becomes visible when printing.
+   Colours must survive black-and-white printing: lights carry a word, red text is bold. */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+.print-root {
+  position: absolute;
+  left: -10000px;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    margin: 0;
+  }
+
+  .app {
+    display: none !important;
+  }
+
+  .print-root {
+    position: static;
+    visibility: visible;
+  }
+}
+
+.ls-page {
+  position: relative;
+  width: 190mm;
+  height: 276mm;
+  overflow: hidden;
+  background: #fff;
+  color: #000;
+  font-family: Arial, Helvetica, 'Liberation Sans', sans-serif;
+  font-size: 8pt;
+  line-height: 1.15;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Too long even at the smallest readable scale: let it run on rather than cut it off. */
+.ls-page-overflow {
+  height: auto;
+  overflow: visible;
+}
+
+.ls-content {
+  transform-origin: top left;
+}
+
+.ls-page h1,
+.ls-page h2,
+.ls-page p {
+  margin: 0;
+}
+
+.ls-watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120pt;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgb(0 0 0 / 0.07);
+  transform: rotate(-35deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ls-title h1 {
+  font-size: 14pt;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.ls-title p {
+  font-size: 8.5pt;
+  color: #333;
+  margin-bottom: 1.5mm;
+}
+
+.ls-page table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ls-page th,
+.ls-page td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.15mm 0.8mm;
+}
+
+.ls-page .num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ls-red {
+  color: #9c0006;
+  font-weight: 700;
+}
+
+.ls-sub {
+  font-weight: 400;
+  color: #444;
+}
+
+/* Header grid */
+.ls-header {
+  margin-bottom: 1.5mm;
+  table-layout: fixed;
+}
+
+.ls-header th {
+  width: 17%;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ls-header td {
+  width: 33%;
+  border-bottom: 0.2mm solid #999;
+}
+
+.ls-header td.ls-write-in {
+  min-height: 4mm;
+}
+
+/* Item table */
+.ls-items {
+  table-layout: fixed;
+  border: 0.3mm solid #000;
+}
+
+.ls-items col.c-note { width: 17.5%; }
+.ls-items col.c-item { width: 35%; }
+.ls-items col.c-qty { width: 4.5%; }
+.ls-items col.c-len { width: 6.5%; }
+.ls-items col.c-weight { width: 9.5%; }
+.ls-items col.c-swl { width: 8.5%; }
+.ls-items col.c-carried { width: 10%; }
+.ls-items col.c-used { width: 8.5%; }
+
+.ls-items thead th {
+  font-weight: 700;
+  border-bottom: 0.3mm solid #000;
+  background: #d9d9d9;
+  white-space: normal;
+}
+
+.ls-items tbody td,
+.ls-items tbody th {
+  border-bottom: 0.15mm solid #bbb;
+  overflow-wrap: anywhere;
+}
+
+.ls-items td:nth-child(n + 3) {
+  overflow-wrap: normal;
+}
+
+.ls-zone th,
+.ls-zone td {
+  background: #e2efda;
+  font-weight: 700;
+  border-top: 0.25mm solid #000;
+}
+
+.ls-blank td {
+  height: 3.4mm;
+  padding: 0;
+}
+
+.ls-flagged td:nth-child(5) {
+  color: #9c0006;
+  font-weight: 700;
+}
+
+.ls-total th,
+.ls-total td {
+  font-size: 9pt;
+  font-weight: 800;
+  border-top: 0.4mm solid #000;
+  background: #f2f2f2;
+}
+
+/* Traffic lights: tint plus a word, never colour alone */
+.ls-light {
+  display: inline-block;
+  padding: 0 0.8mm;
+  border-radius: 0.6mm;
+  white-space: nowrap;
+}
+
+.ls-light-ok { background: #c6efce; color: #006100; }
+.ls-light-check { background: #ffeb9c; color: #6b3d00; }
+.ls-light-over { background: #ffc7ce; color: #9c0006; outline: 0.3mm solid #9c0006; }
+
+/* Connection point and capacity */
+.ls-point,
+.ls-capacity,
+.ls-statements {
+  margin-top: 1.5mm;
+}
+
+.ls-page h2 {
+  font-size: 8.5pt;
+  font-weight: 800;
+  margin-bottom: 0.4mm;
+}
+
+.ls-figures th {
+  font-weight: 700;
+}
+
+.ls-figures td {
+  width: 30mm;
+}
+
+.ls-figures tr {
+  border-bottom: 0.15mm solid #bbb;
+}
+
+.ls-strong th,
+.ls-strong td {
+  font-weight: 800;
+  font-size: 9pt;
+}
+
+.ls-line {
+  margin-top: 1mm !important;
+}
+
+.ls-capacity table {
+  table-layout: fixed;
+}
+
+.ls-capacity thead th {
+  background: #d9d9d9;
+  font-weight: 700;
+}
+
+.ls-capacity th:first-child { width: 24%; }
+.ls-capacity th:nth-child(2) { width: 42%; }
+
+.ls-capacity tbody td,
+.ls-capacity tbody th {
+  border-bottom: 0.15mm solid #bbb;
+}
+
+.ls-governing th {
+  white-space: nowrap;
+}
+
+.ls-governing th,
+.ls-governing td {
+  font-size: 8.5pt;
+  font-weight: 800;
+  border-top: 0.4mm solid #000;
+  border-bottom: 0.4mm solid #000;
+}
+
+.ls-statements p {
+  margin-bottom: 0.5mm !important;
+}
+
+/* Small print */
+.ls-small-print {
+  margin-top: 1.5mm;
+  font-size: 6.5pt;
+  line-height: 1.2;
+  color: #222;
+}
+
+.ls-small-print p {
+  margin-bottom: 0.5mm !important;
+}
+
+.ls-sp-heading {
+  color: #555;
+}
+
+.ls-sp-warning {
+  color: #9c0006;
+  font-weight: 800;
+}
+
+/* Signatures */
+.ls-signatures {
+  margin-top: 1.5mm;
+  table-layout: fixed;
+}
+
+.ls-signatures th {
+  width: 12%;
+  font-weight: 700;
+  padding-top: 2.5mm;
+}
+
+.ls-signatures td {
+  border-bottom: 0.2mm solid #000;
+  padding-top: 2.5mm;
+}
+
+.ls-signatures td:nth-of-type(1) { width: 26%; }
+.ls-signatures td:nth-of-type(2) { width: 22%; }
+.ls-signatures td:nth-of-type(3) { width: 16%; }
+
+.ls-footer {
+  margin-top: 1.5mm;
+  font-size: 6.5pt;
+  color: #444;
+}

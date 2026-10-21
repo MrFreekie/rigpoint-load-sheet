@@ -33,6 +33,12 @@ export function JobPanel({ job, dispatch }: { job: EditorShow['job']; dispatch: 
           onChange={(v) => set('status', v)}
         />
         <TextField label="Revision" value={job.revision} placeholder="blank for first issue" onChange={(v) => set('revision', v)} />
+        <DateField
+          label="Sheet Date"
+          value={job.sheet_date}
+          onChange={(v) => set('sheet_date', v)}
+          hint="Leave blank to print a line for handwriting."
+        />
         <NumberField
           label="Contingency"
           unit="%"

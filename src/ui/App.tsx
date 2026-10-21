@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { calculate } from '../engine/calculate';
 import { ZONES } from '../engine/types';
 import { clearAutosave, indexedDbStore, readAutosave, writeAutosave, type AutosaveRecord } from '../files/autosave';
@@ -6,6 +7,8 @@ import { compareWithLibrary, type Comparison } from '../files/compare';
 import { downloadText, readFileText } from '../files/download';
 import { parseShowFile, serialiseShow, toShowFile } from '../files/show-io';
 import { exampleShow, library, libraryByName } from '../library';
+import { printFooter } from '../print/footer';
+import { LoadSheet } from '../print/LoadSheet';
 import type { ShowFile } from '../schema/show-file';
 import { CompareDialog } from './CompareDialog';
 import { Dialog } from './Dialog';
@@ -46,6 +49,8 @@ export function App() {
   const [autosaveReady, setAutosaveReady] = useState(false);
   const [autosaveFailed, setAutosaveFailed] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const [printedAt, setPrintedAt] = useState(() => new Date());
+  const [printOverflow, setPrintOverflow] = useState(false);
 
   const show = doc.show;
   const hang = currentHang(show);
@@ -96,6 +101,28 @@ export function App() {
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
   }, [dirty, show]);
+
+  // ---- Printing: stamp the time whenever a print starts, including from the browser menu.
+  useEffect(() => {
+    const stamp = () => flushSync(() => setPrintedAt(new Date()));
+    window.addEventListener('beforeprint', stamp);
+    return () => window.removeEventListener('beforeprint', stamp);
+  }, []);
+
+  const onPrint = () => {
+    flushSync(() => setPrintedAt(new Date()));
+    window.print();
+  };
+
+  const footer = printFooter({
+    appVersion: __APP_VERSION__,
+    showSpec: show.spec_version,
+    librarySpec: library.spec_version,
+    fileName: doc.fileName,
+    defaultName: showFileName(show.job.name, hang.name, show.job.revision),
+    dirty,
+    printedAt,
+  });
 
   const confirmDiscard = (what: string) =>
     !dirty || window.confirm(`${what}? Unsaved changes to ${showTitle(show)} will be lost.`);
@@ -191,6 +218,7 @@ export function App() {
   };
 
   return (
+    <>
     <div className="app">
       <header className="app-header">
         <div className="brand">
@@ -219,6 +247,9 @@ export function App() {
           </button>
           <button type="button" className="button primary" onClick={onSave} disabled={doc.locked}>
             Save
+          </button>
+          <button type="button" className="button" onClick={onPrint}>
+            Print
           </button>
           <button type="button" className="button" onClick={onLoadExample}>
             Load example
@@ -295,6 +326,12 @@ export function App() {
           <button type="button" className="link-button" onClick={() => setNotice(null)}>
             Dismiss
           </button>
+        </p>
+      ) : null}
+
+      {printOverflow ? (
+        <p className="warning" role="status">
+          ⚠ This hang has too many rows to print on one A4 page at a readable size. The Load Sheet will run onto a second page.
         </p>
       ) : null}
 
@@ -397,6 +434,17 @@ export function App() {
         </p>
       </footer>
     </div>
+    <div className="print-root" aria-hidden="true">
+      <LoadSheet
+        show={show}
+        hang={hang}
+        result={result}
+        contingencyLabel={contingencyLabel}
+        footer={footer}
+        onOverflow={setPrintOverflow}
+      />
+    </div>
+    </>
   );
 }
 

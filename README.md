@@ -2,7 +2,9 @@
 
 A static web app that calculates and documents the load on a single flown loudspeaker hang, replacing the `The_Ballroom_Array_Weights_v6.xlsx` workbook. Everything runs in the browser: no server, no accounts, no tracking. Show files never leave your device unless you move them.
 
-> **Status:** phase 3 of 5 – calculation engine, editing interface and show files (open, save, autosave, compare with the library, approval lock). Printing and offline use come in later phases. See `BRIEF.md` for the full plan.
+> **Status:** phase 4 of 5 – calculation engine, editing interface, show files and the printed Load Sheet. Offline use and desktop save-in-place come in phase 5. See `BRIEF.md` for the full plan.
+
+**Live site:** https://mrfreekie.github.io/rigpoint-load-sheet/
 
 ## What it calculates
 
@@ -29,7 +31,7 @@ npm run ci
 | `npm run typecheck` | TypeScript, strict mode |
 | `npm run lint` | ESLint, including a rule that keeps the engine free of DOM and storage code |
 | `npm test` | Engine scenarios, unit, property and differential tests; schema tests |
-| `npm run e2e` | Playwright end-to-end tests on Chromium, Firefox, iPhone SE (WebKit) and Android, against the production build. Run `npx playwright install` once first |
+| `npm run e2e` | Playwright end-to-end tests on Chromium, Firefox, iPhone SE (WebKit) and Android, against the production build, including the one-page print checks. Run `npx playwright install` once first |
 | `npm run validate:spec` | Spec library validation and the `spec_version` check |
 | `npm run reference` | Runs the Python reference engine against the scenarios |
 
@@ -39,6 +41,7 @@ npm run ci
 |---|---|
 | `src/engine/` | Pure calculation: `calculate(hang, contingency)` |
 | `src/schema/` | Zod schemas for the Spec library and show files, with plain-English errors |
+| `src/print/` | The Load Sheet print view, its stylesheet and the fixed small print |
 | `src/files/` | Open, save, autosave, migrations and compare-on-open |
 | `e2e/` | Playwright end-to-end tests |
 | `src/ui/` | React editing interface; displays engine results and calculates nothing itself |
@@ -62,13 +65,17 @@ A show is saved as `<Job> - <Hang>.loadsheet.json` (with ` - Rev B` added once i
 - **Compare on open** lists any item whose weight, per or SWL differs from the current Spec library. Nothing changes unless you choose *Update selected*.
 - **Approved and superseded** shows open read-only. *Create new revision* makes an editable draft copy with the next revision letter (blank, A, B, …), saved under a new name.
 
+## Printing the Load Sheet
+
+**Print** produces the Load Sheet: one A4 portrait page laid out like the workbook's Load Sheet tab, scaled to fit as the workbook's "fit to 1 page" setting does. Drafts carry a faint DRAFT watermark. The footer records the app version, spec version, file name and print time, so every printout can be traced to the code and data that produced it; it says "(unsaved changes)" or "(not saved)" when the printout does not match a saved file.
+
 ## Disclaimer
 
 This software is provided as-is, without warranty. It is a calculation aid and does not replace assessment by a competent person.
 
 **SCOPE** — Analyses the load paths of ONE hang. Each rated component is checked against the load it carries. Top rigging carries everything; the hoist carries the hook load (body up) or its own zone plus the hook load (body down); the hook/junction carries both paths; each path component carries the items listed below it. This is a load list, not a rigging design: bridle geometry, sling angles, load transfer between points and the venue structure are not assessed.
 
-**DATA** — Weights and SWL/WLL figures are taken from the Spec library in this workbook and are indicative only. Verify against current manufacturer data and the certification of the actual equipment before use. TBC items have no recorded weight and are excluded from totals. Where several rated items share a zone or quantity is greater than 1, each is checked against the full load below it. Unrated items are not checked.
+**DATA** — Weights and SWL/WLL figures are taken from the Spec library in this app and are indicative only. Verify against current manufacturer data and the certification of the actual equipment before use. TBC items have no recorded weight and are excluded from totals. Where several rated items share a zone or quantity is greater than 1, each is checked against the full load below it. Unrated items are not checked.
 
 **LOADS** — Static weights only. No dynamic, shock or snatch allowance is included; snatch loading, slack-chain pick-up and hoist stall must be prevented by procedure. The contingency covers unlisted items and measurement error only. 1t = 1,000 kg.
 
