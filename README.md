@@ -2,7 +2,7 @@
 
 A static web app that calculates and documents the load on a single flown loudspeaker hang, replacing the `The_Ballroom_Array_Weights_v6.xlsx` workbook. Everything runs in the browser: no server, no accounts, no tracking. Show files never leave your device unless you move them.
 
-> **Status:** phase 1 of 5 – calculation engine and tests. There is no user interface yet. See `BRIEF.md` for the full plan.
+> **Status:** phase 2 of 5 – calculation engine and editing interface. Opening and saving show files, printing and offline use come in later phases. See `BRIEF.md` for the full plan.
 
 ## What it calculates
 
@@ -24,6 +24,8 @@ npm run ci
 
 | Command | What it does |
 |---|---|
+| `npm run dev` | Development server at http://localhost:5173/rigpoint-load-sheet/ |
+| `npm run build` | Production build into `dist/` |
 | `npm run typecheck` | TypeScript, strict mode |
 | `npm run lint` | ESLint, including a rule that keeps the engine free of DOM and storage code |
 | `npm test` | Engine scenarios, unit, property and differential tests; schema tests |
@@ -36,6 +38,7 @@ npm run ci
 |---|---|
 | `src/engine/` | Pure calculation: `calculate(hang, contingency)` |
 | `src/schema/` | Zod schemas for the Spec library and show files, with plain-English errors |
+| `src/ui/` | React editing interface; displays engine results and calculates nothing itself |
 | `src/testing/` | Test helpers: fixture loading and seeded random hangs |
 | `data/spec-library.json` | Equipment library. Changes go through pull requests – see `CONTRIBUTING.md` |
 | `fixtures/` | Test scenarios with expected results, and the Ballroom sample show file |

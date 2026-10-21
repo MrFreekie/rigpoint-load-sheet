@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -10,6 +11,11 @@ export default tseslint.config(
     languageOptions: {
       globals: { ...globals.node },
     },
+  },
+  {
+    files: ['src/**/*.tsx', 'src/ui/**/*.ts', 'src/main.tsx'],
+    ...reactHooks.configs.flat['recommended-latest'],
+    languageOptions: { globals: { ...globals.browser } },
   },
   {
     // The engine must stay pure: no DOM, storage or framework code.
