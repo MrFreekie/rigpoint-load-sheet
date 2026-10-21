@@ -34,3 +34,11 @@ export async function pickItem(page: Page, rowLabel: string, search: string, opt
 }
 
 export const governing = (page: Page) => page.locator('.governing');
+
+/**
+ * The file name the browser will save under. WebKit's Linux build replaces spaces with
+ * underscores in download names; the name the app asks for has spaces.
+ */
+export function savedName(download: Download): string {
+  return download.suggestedFilename().replace(/_/g, ' ');
+}

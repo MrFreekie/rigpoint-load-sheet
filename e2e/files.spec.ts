@@ -1,7 +1,7 @@
 // Phase 3: a show can be created, saved, closed, reopened and revised, in every browser.
 
 import { expect, test } from '@playwright/test';
-import { ballroom, governing, openFile, pickItem, save, start } from './helpers';
+import { ballroom, governing, openFile, pickItem, save, savedName, start } from './helpers';
 
 test('create, save, close, reopen and revise a show', async ({ page }) => {
   await start(page);
@@ -20,7 +20,7 @@ test('create, save, close, reopen and revise a show', async ({ page }) => {
 
   // Save.
   const first = await save(page);
-  expect(first.download.suggestedFilename()).toBe('Test Job - Hang A.loadsheet.json');
+  expect(savedName(first.download)).toBe('Test Job - Hang A.loadsheet.json');
   expect(first.json.format).toBe('loadsheet/1');
   expect(first.json.job).toMatchObject({ name: 'Test Job', status: 'draft', revision: '' });
   expect(first.text).not.toContain('"key"');
@@ -58,7 +58,7 @@ test('create, save, close, reopen and revise a show', async ({ page }) => {
   await page.getByLabel('Qty, Load path 1 – array row 2').fill('16');
   await expect(governing(page)).toContainText('52.5%');
   const revA = await save(page);
-  expect(revA.download.suggestedFilename()).toBe('Test Job - Hang A - Rev A.loadsheet.json');
+  expect(savedName(revA.download)).toBe('Test Job - Hang A - Rev A.loadsheet.json');
   expect(revA.json.job).toMatchObject({ status: 'draft', revision: 'A', sheet_date: null });
 });
 
