@@ -8,9 +8,20 @@ export const ballroom = JSON.parse(
   hangs: { zones: Record<string, { item: string | null; snapshot: Record<string, unknown> | null }[]> }[];
 };
 
-/** Open the app with a clean slate. Confirmations and leave-page prompts are accepted. */
-export async function start(page: Page) {
+/**
+ * Open the app with a clean slate. Confirmations and leave-page prompts are accepted.
+ * By default the File System Access API is hidden, so Chromium uses layer 1 (file input and
+ * download) like every other browser; pass fsAccess to keep it.
+ */
+export async function start(page: Page, opts: { fsAccess?: boolean } = {}) {
   page.on('dialog', (d) => void d.accept());
+  if (!opts.fsAccess) {
+    await page.addInitScript(() => {
+      const w = Window.prototype as unknown as Record<string, unknown>;
+      delete w.showOpenFilePicker;
+      delete w.showSaveFilePicker;
+    });
+  }
   await page.goto('./');
   await expect(page.getByRole('button', { name: 'Open', exact: true })).toBeVisible();
 }

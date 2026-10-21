@@ -1308,3 +1308,43 @@ fieldset.lock[disabled] .row-actions {
   font-weight: 600;
   color: var(--danger);
 }
+
+/* ---------- Phase 5: update banner, recent files ---------- */
+
+.banner-update {
+  border-color: var(--accent);
+}
+
+.recent-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.recent-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.recent-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.recent-when {
+  display: block;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.recent-actions {
+  display: flex;
+  gap: 0.5rem;
+}
