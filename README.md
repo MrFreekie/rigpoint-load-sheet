@@ -1,83 +1,64 @@
 # RigPoint Load Sheet
 
-A static web app that calculates and documents the load on a single flown loudspeaker hang, replacing the `The_Ballroom_Array_Weights_v6.xlsx` workbook. Everything runs in the browser: no server, no accounts, no tracking. Show files never leave your device unless you move them.
+Work out the load on a flown loudspeaker hang and print a Load Sheet for it, on a laptop or a phone.
 
-> **Status:** phase 5 of 5 – calculation engine, editing interface, show files, the printed Load Sheet, offline use and desktop save-in-place. See `BRIEF.md` for the full plan.
+**Open the app:** https://mrfreekie.github.io/rigpoint-load-sheet/
 
-**Live site:** https://mrfreekie.github.io/rigpoint-load-sheet/
+There is nothing to sign up for. Everything runs on your own device, and your show files never leave it unless you move them.
 
-## What it calculates
+## What it does
 
-A hang is split into five zones, top-down: top rigging, hoist, hook / junction, load path 1 (array) and load path 2 (cables). Each rated component is checked against the load it carries, plus a single contingency percentage (default 5%). Results are in kilograms only. There are no dynamic, derating or safety factors; SWL/WLL figures are used exactly as stored in the Spec library.
+You list everything on one hang, from the connection point down: top rigging, hoist, hook or junction, the array, and the cables. The app then:
 
-The governing component is the rated item with the highest utilisation. The static load at the connection point (unfactored) is the figure for structural engineers.
+- checks every rated item (hoists, shackles, bumpers, slings) against the weight it carries, plus a contingency (5% unless you change it)
+- names the **governing component**, the item working hardest, with a green OK, amber CHECK or red OVER
+- gives the **static load at the point**, unfactored, for the venue or structural engineer
+- flags any item with a missing weight, so you know when the total is too low
+- prints a one-page A4 **Load Sheet** with signature boxes
 
-## Development
+All weights are in kilograms. Ratings are used exactly as the manufacturer states them, with no extra factors.
 
-Requires Node.js 24 or later. The differential test also needs Python 3.
+## Getting started
 
-```bash
-npm install
-```
+1. Open https://mrfreekie.github.io/rigpoint-load-sheet/
+2. Press **Load example** to see a finished hang (the Ballroom main hang).
+3. Press **New** to start your own.
+4. Fill in the job and hang details, then add the items zone by zone, top-down.
+5. Press **Save** to keep the show as a file, and **Print** for the Load Sheet.
 
-```bash
-npm run ci
-```
+The **[user guide](docs/user-guide.md)** explains each step, how to read the results, and what the warnings mean.
 
-| Command | What it does |
-|---|---|
-| `npm run dev` | Development server at http://localhost:5173/rigpoint-load-sheet/ |
-| `npm run build` | Production build into `dist/` |
-| `npm run typecheck` | TypeScript, strict mode |
-| `npm run lint` | ESLint, including a rule that keeps the engine free of DOM and storage code |
-| `npm test` | Engine scenarios, unit, property and differential tests; schema tests |
-| `npm run e2e` | Playwright end-to-end tests on Chromium, Firefox, iPhone SE (WebKit) and Android, against the production build, including the one-page print checks. Run `npx playwright install` once first |
-| `npm run validate:spec` | Spec library validation and the `spec_version` check |
-| `npm run reference` | Runs the Python reference engine against the scenarios |
-| `npm run icons` | Renders `public/favicon.svg` into the PNG app icons. Run after changing the SVG; the PNGs are committed |
+## Install it, and use it with no signal
 
-### Layout
+In Chrome or Edge, click the install icon at the end of the address bar and choose **Install**. On Android, use **Add to home screen**; on iPhone, Share, then **Add to Home Screen**.
 
-| Path | Contents |
-|---|---|
-| `src/engine/` | Pure calculation: `calculate(hang, contingency)` |
-| `src/schema/` | Zod schemas for the Spec library and show files, with plain-English errors |
-| `src/print/` | The Load Sheet print view, its stylesheet and the fixed small print |
-| `src/files/` | Open, save, save in place, recent files, autosave, migrations and compare-on-open |
-| `src/sw.ts` | The service worker: offline precache and the Android share target |
-| `e2e/` | Playwright end-to-end tests |
-| `src/ui/` | React editing interface; displays engine results and calculates nothing itself |
-| `src/testing/` | Test helpers: fixture loading and seeded random hangs |
-| `data/spec-library.json` | Equipment library. Changes go through pull requests – see `CONTRIBUTING.md` |
-| `fixtures/` | Test scenarios with expected results, and the Ballroom sample show file |
-| `reference/` | The workbook (the specification) and the Python reference engine |
+Once you have opened the app once, it works offline, installed or not. On a computer with the app installed:
 
-### How the engine is tested
+- **Save** updates the same file each time, after the first **Save As**.
+- **Recent** reopens the show files you used last.
+- Double-click a show file to open it in the app.
 
-- **Scenarios** – the nine cases in `fixtures/scenarios.json`, taken from the recalculated workbook.
-- **Unit tests** – LEN?, TBC, quantity 0, empty zones, note-only rows, items no longer in the library, contingency 0, ties, traffic lights, point capacity and rounding.
-- **Property test** – increasing any row's quantity never decreases any utilisation (500 random hangs).
-- **Differential test** – 400 random hangs built from the real library are run through both the TypeScript engine and `reference/engine_reference.py`; every value must match exactly.
+On Android you can share a show file from email or chat straight into the app.
+
+When there is a new version, the app shows **Update available – reload**. Press **Reload** when it suits you; unsaved changes are kept and offered back.
+
+The user guide has the full steps for [installing](docs/user-guide.md#installing-the-app-and-working-offline) and [updates](docs/user-guide.md#updates).
 
 ## Show files
 
-A show is saved as `<Job> - <Hang>.loadsheet.json` (with ` - Rev B` added once it has a revision). Open reads a file you choose; Save downloads one. Files never leave your device unless you move them, so keep them in a folder your cloud service already syncs if you want them backed up.
+Each show is saved as a file such as `The Ballroom - Main Hang Left.loadsheet.json`. That file is the record. Keep it in a folder that your Dropbox, OneDrive or Google Drive already syncs if you want a backup.
 
-- **Autosave** keeps a copy of unsaved changes in this browser only, as a safety net. The saved file is the record.
-- **Compare on open** lists any item whose weight, per or SWL differs from the current Spec library. Nothing changes unless you choose *Update selected*.
-- **Approved and superseded** shows open read-only. *Create new revision* makes an editable draft copy with the next revision letter (blank, A, B, …), saved under a new name.
+- **Autosave** keeps your unsaved changes in the browser, in case it closes. It is a safety net, not a backup.
+- **Approved** and **Superseded** shows open read-only. **Create new revision** makes an editable copy (Rev A, Rev B and so on) in a new file, and leaves the original alone.
+- When you open an older show, the app tells you if any weights or ratings in the equipment list have changed since. Nothing changes unless you choose it.
 
-## Install, offline and desktop saving
+## Missing equipment
 
-- **Install and offline.** In Chrome or Edge, use *Install* in the address bar (on Android, *Add to home screen*). Once the app has loaded, it and the Spec library are stored in the browser and it works with no network, installed or not. It says "Ready to work offline" the first time.
-- **Save, Save As and Recent (Chrome and Edge desktop).** *Save As* chooses a file; after that, *Save* writes straight back to it instead of downloading a copy. Opening a file there does the same. *Recent* lists the last few show files you opened or saved, so you can reopen them without hunting through folders; the browser may ask again for permission to use a file. Other browsers keep the download behaviour described above.
-- **Double-click to open.** With the app installed on Chrome or Edge desktop, `.loadsheet.json` files can open in it directly from your file manager.
-- **Sharing from Android.** With the app installed on Android, share a show file from another app (email, a file manager, a chat) and choose Load Sheet to open it.
-- **Updates.** A new version never replaces the app in the middle of an edit. When one is ready the app shows *Update available – reload*; choose *Reload* when it suits you. Unsaved changes are kept by autosave and offered back after the reload.
+Every weight and rating comes from the built-in equipment list, which you can browse with **Library**. If something is missing or a figure looks wrong, send the manufacturer's data sheet or certificate to whoever looks after the app. Each change is checked by a second person before it goes in; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Printing the Load Sheet
+## For developers
 
-**Print** produces the Load Sheet: one A4 portrait page laid out like the workbook's Load Sheet tab, scaled to fit as the workbook's "fit to 1 page" setting does. Drafts carry a faint DRAFT watermark. The footer records the app version, spec version, file name and print time, so every printout can be traced to the code and data that produced it; it says "(unsaved changes)" or "(not saved)" when the printout does not match a saved file.
+Setup, commands, tests and how releases work are in [docs/development.md](docs/development.md).
 
 ## Disclaimer
 
@@ -91,4 +72,4 @@ This software is provided as-is, without warranty. It is a calculation aid and d
 
 ## Licence
 
-MIT – see `LICENCE`.
+MIT, see `LICENCE`.

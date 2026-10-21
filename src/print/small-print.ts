@@ -1,4 +1,4 @@
-// The Load Sheet small print (BRIEF.md section 10, item 8). FIXED TEXT: reproduce exactly.
+// The Load Sheet small print. FIXED TEXT: reproduce exactly.
 // Do not reword, shorten or "improve" it without the owner's agreement. DISCLAIMER.md and
 // README.md carry SCOPE, DATA and LOADS verbatim; a test checks they stay identical.
 //
