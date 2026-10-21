@@ -1,7 +1,7 @@
 // Phase 3: a show can be created, saved, closed, reopened and revised, in every browser.
 
 import { expect, test } from '@playwright/test';
-import { ballroom, governing, openFile, pickItem, save, savedName, start } from './helpers';
+import { ballroom, governing, librarySpecVersion, openFile, pickItem, save, savedName, start } from './helpers';
 
 test('create, save, close, reopen and revise a show', async ({ page }) => {
   await start(page);
@@ -96,7 +96,7 @@ test('compare on open lists library changes and changes nothing unless chosen', 
 
   await openFile(page, 'old.loadsheet.json', text);
   const dialog = page.getByRole('dialog');
-  await expect(dialog.getByRole('heading')).toHaveText('Library changes since this show was saved (spec 2026-01-01 → 2026-10-21)');
+  await expect(dialog.getByRole('heading')).toHaveText(`Library changes since this show was saved (spec 2026-01-01 → ${librarySpecVersion})`);
   await expect(dialog).toContainText('L-Acoustics M-BUMP — weight 24 kg → 25 kg');
   await expect(dialog).toContainText('Old Shackle X — no longer in library (snapshot kept)');
   await expect(dialog).toContainText('L-Acoustics M-BAR — no change');
