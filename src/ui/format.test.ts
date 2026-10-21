@@ -50,7 +50,7 @@ describe('item search', () => {
   const names = (q: string) => searchItems(library.items, q).map((i) => i.name);
 
   it('empty query returns the whole library in order', () => {
-    expect(names('')).toHaveLength(177);
+    expect(names('')).toHaveLength(library.items.length);
   });
 
   it('matches every word in any order, ignoring case', () => {
@@ -62,6 +62,12 @@ describe('item search', () => {
   it('folds superscripts so "mm2" finds "mm²"', () => {
     expect(normalise('2.5mm²')).toBe('2.5mm2');
     expect(names('4x 2.5mm2')).toContain('H07RN-F 4x 2.5mm²');
+  });
+
+  it('treats × as x, so "4x12" finds "4×12"', () => {
+    expect(normalise('4×12')).toBe('4x12');
+    expect(names('chainmaster 4x12')).toEqual(['Chainmaster 4×12 mm – DIN EN 818-7']);
+    expect(names('chainmaster 1000kg')).toEqual(['Chainmaster 1000kg – D8Plus Ultra-LV']);
   });
 
   it('ranks names starting with the query first', () => {

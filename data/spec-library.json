@@ -1,6 +1,6 @@
 {
   "format": "loadsheet-spec/1",
-  "spec_version": "2026-10-21",
+  "spec_version": "2026-10-21.2",
   "units": {
     "kg": "kilograms (per metre when per = m)",
     "swl_kg": "kilograms"
@@ -479,6 +479,60 @@
       "kg": null,
       "per": "m",
       "swl_kg": 5420,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 4×12 mm – DIN EN 818-7",
+      "kg": 0.35,
+      "per": "m",
+      "swl_kg": 250,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 5,2×15 mm – DIN EN 818-7",
+      "kg": 0.55,
+      "per": "m",
+      "swl_kg": 320,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster P 5,4×15 mm – DIN EN 818-7",
+      "kg": 0.59,
+      "per": "m",
+      "swl_kg": 500,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster P 7,4×21,1 mm – DIN EN 818-7",
+      "kg": 1.3,
+      "per": "m",
+      "swl_kg": 1000,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 9×27 mm – DIN EN 818-7",
+      "kg": 1.8,
+      "per": "m",
+      "swl_kg": 1250,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 11,3×31 mm – DIN EN 818-7",
+      "kg": 2.85,
+      "per": "m",
+      "swl_kg": 2000,
       "weight_note": null,
       "source": null,
       "verified": null
@@ -974,6 +1028,60 @@
       "kg": 61.7,
       "per": "each",
       "swl_kg": 1000,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 250kg – D8Plus Ultra-LV",
+      "kg": 13.0,
+      "per": "each",
+      "swl_kg": 250,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 320kg – D8Plus Ultra-LV",
+      "kg": 21.0,
+      "per": "each",
+      "swl_kg": 320,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 500kg – D8Plus Ultra-LV",
+      "kg": 21.0,
+      "per": "each",
+      "swl_kg": 500,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 1000kg – D8Plus Ultra-LV",
+      "kg": 36.0,
+      "per": "each",
+      "swl_kg": 1000,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 1250kg – D8Plus Ultra-LV",
+      "kg": 59.0,
+      "per": "each",
+      "swl_kg": 1250,
+      "weight_note": null,
+      "source": null,
+      "verified": null
+    },
+    {
+      "name": "Chainmaster 2000kg – D8Plus Ultra-LV",
+      "kg": 68.0,
+      "per": "each",
+      "swl_kg": 2000,
       "weight_note": null,
       "source": null,
       "verified": null

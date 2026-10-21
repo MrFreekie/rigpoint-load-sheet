@@ -5,7 +5,7 @@
 Every weight or rating in `data/spec-library.json` ends up on a Load Sheet that someone uses to decide whether a rig is within limits. So library changes always go through a pull request, and **a second person reviews every weight or SWL change** before it is merged.
 
 1. Make a branch and edit `data/spec-library.json`.
-2. Set `spec_version` to today's date (`yyyy-mm-dd`). CI fails if the library changes without `spec_version` moving forward.
+2. Set `spec_version` to today's date (`yyyy-mm-dd`). If the library has already changed today, add a change number: `2026-10-21.2`, then `.3`, and so on. CI fails if the library changes without `spec_version` moving forward.
 3. Record where each new or changed figure came from:
    - `weight_note` – how the figure was derived, e.g. `"27.82 kg / 40 m"`.
    - `source` – the manufacturer data sheet, certificate or measurement.
