@@ -23,12 +23,12 @@ describe('data/spec-library.json', () => {
     expect(parsed.error?.issues ?? []).toEqual([]);
   });
 
-  it('has the expected counts (189 items, 27 TBC, 85 rated)', () => {
+  it('has the expected counts (189 items, 27 TBC, 89 rated)', () => {
     // Update these when the library changes; they guard against accidental edits.
     const items = parsed.data!.items;
     expect(items).toHaveLength(189);
     expect(items.filter((i) => i.kg === null)).toHaveLength(27);
-    expect(items.filter((i) => (i.swl_kg ?? 0) > 0)).toHaveLength(85);
+    expect(items.filter((i) => (i.swl_kg ?? 0) > 0)).toHaveLength(89);
   });
 });
 

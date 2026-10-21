@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import ballroomJson from '../../fixtures/ballroom.loadsheet.json';
-import { libraryByName } from '../library';
-import type { SpecItem } from '../schema/spec-library';
+import { indexByName, type SpecItem } from '../schema/spec-library';
+import { workbookLibrary } from '../testing/fixtures';
 import { ShowFileSchema, type ShowFile } from '../schema/show-file';
 import { applyLibraryUpdates, compareWithLibrary } from './compare';
 
 const STEEL = 'Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003';
 const BUMP = 'L-Acoustics M-BUMP';
 const show = (): ShowFile => ShowFileSchema.parse(structuredClone(ballroomJson));
+/** The Ballroom example was saved with the workbook's library. */
+const libraryByName = indexByName(workbookLibrary);
 
 /** The current library with some items changed or removed. */
 function libraryWith(changes: Record<string, Partial<SpecItem> | null>): Map<string, SpecItem> {

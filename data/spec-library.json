@@ -406,7 +406,7 @@
       "name": "CM 6.35 x 18.91 1 Fall",
       "kg": 0.87,
       "per": "m",
-      "swl_kg": null,
+      "swl_kg": 250,
       "weight_note": null,
       "source": null,
       "verified": null
@@ -415,7 +415,7 @@
       "name": "CM 7.92 x 21.80 1 Fall",
       "kg": 1.4,
       "per": "m",
-      "swl_kg": null,
+      "swl_kg": 1000,
       "weight_note": null,
       "source": null,
       "verified": null
@@ -424,7 +424,7 @@
       "name": "CM 7.92 x 21.80 2 Fall",
       "kg": 2.8,
       "per": "m",
-      "swl_kg": null,
+      "swl_kg": 2000,
       "weight_note": null,
       "source": null,
       "verified": null
@@ -433,7 +433,7 @@
       "name": "CM 10.0 x 30.00 1 Fall",
       "kg": 2.16,
       "per": "m",
-      "swl_kg": null,
+      "swl_kg": 1000,
       "weight_note": null,
       "source": null,
       "verified": null

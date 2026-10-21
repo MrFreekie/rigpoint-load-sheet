@@ -104,8 +104,10 @@ test('Save writes back to the opened file; Save As picks a new one; recent files
   await writeOpfs(page, name, JSON.stringify(ballroom));
   await page.evaluate((n) => ((window as unknown as Record<string, unknown>).__nextOpen = n), name);
 
-  // Open through the picker: no download involved.
+  // Open through the picker: no download involved. The Ballroom was saved with an older
+  // library, so the library-changes list appears first; keep the show as saved.
   await page.getByRole('button', { name: 'Open', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Keep as saved' }).click();
   await expect(page.getByText(`Saved · ${name}`)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Save As' })).toBeVisible();
 
@@ -123,6 +125,7 @@ test('Save writes back to the opened file; Save As picks a new one; recent files
   await page.reload();
   await page.getByRole('button', { name: 'Recent' }).click();
   await page.getByRole('button', { name: `Open ${name}` }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Keep as saved' }).click();
   await expect(page.getByLabel('Venue')).toHaveValue('Grand Hotel');
   await page.getByLabel('Venue').fill('Grand Hotel – Ballroom');
   await page.getByRole('button', { name: 'Save', exact: true }).click();
@@ -146,6 +149,8 @@ test('a new revision of an approved show never overwrites the original file', as
   await page.evaluate((n) => ((window as unknown as Record<string, unknown>).__nextOpen = n), original);
 
   await page.getByRole('button', { name: 'Open', exact: true }).click();
+  // Read-only, so the library-changes list is for information only.
+  await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click();
   await expect(page.getByRole('heading', { name: 'Read-only: this show is Approved' })).toBeVisible();
   await page.getByRole('button', { name: 'Create new revision' }).click();
   await page.getByRole('button', { name: 'Save', exact: true }).click();
