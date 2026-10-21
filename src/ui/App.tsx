@@ -5,6 +5,10 @@ import { ZONES } from '../engine/types';
 import { clearAutosave, indexedDbStore, readAutosave, writeAutosave, type AutosaveRecord } from '../files/autosave';
 import { compareWithLibrary, type Comparison } from '../files/compare';
 import { downloadText, readFileText } from '../files/download';
+import { ensurePermission, fsAccessSupported, pickSaveLocation, pickShowToOpen, writeToHandle } from '../files/fs-access';
+import { onLaunchFile } from '../files/launch';
+import { addRecent, listRecent, removeRecent, sameHandle, type RecentFile } from '../files/recent';
+import { takeSharedFile } from '../files/share-target';
 import { parseShowFile, serialiseShow, toShowFile } from '../files/show-io';
 import { exampleShow, library, libraryByName } from '../library';
 import { printFooter } from '../print/footer';
@@ -16,9 +20,11 @@ import { docReducer, isDirty, newDoc } from './document';
 import { currentHang, type EditorAction } from './editor';
 import { contingencyToPercent, formatDate, formatKg, showFileName } from './format';
 import { LibraryViewer } from './LibraryViewer';
+import { RecentFilesDialog } from './RecentFilesDialog';
 import { HangPanel, JobPanel } from './Panels';
 import { SummaryPanel } from './SummaryPanel';
 import { TrafficLight } from './TrafficLight';
+import { UpdatePrompt } from './UpdatePrompt';
 import { ZoneCard } from './ZoneCard';
 
 type View = 'editor' | 'library';
@@ -33,17 +39,26 @@ function showTitle(show: { job: { name: string }; hangs: { name: string }[] }): 
 
 const STATUS_WORDS = { approved: 'Approved', superseded: 'Superseded', draft: 'Draft', issued: 'Issued' } as const;
 
-interface OpenError {
-  fileName: string;
+interface FileError {
+  title: string;
   message: string;
   details: string[];
+  /** True when the show on screen is unaffected (every open failure). */
+  unchanged: boolean;
 }
+
+const errorText = (e: unknown, fallback: string) => (e instanceof Error && e.message ? e.message : fallback);
 
 export function App() {
   const [doc, dispatch] = useReducer(docReducer, library.spec_version, newDoc);
   const [view, setView] = useState<View>('editor');
   const [comparison, setComparison] = useState<Comparison | null>(null);
-  const [openError, setOpenError] = useState<OpenError | null>(null);
+  const [fileError, setFileError] = useState<FileError | null>(null);
+  // Layer 2 (Chrome and Edge desktop): the file on disk this show saves back to.
+  const [fsAccess] = useState(fsAccessSupported);
+  const [handle, setHandle] = useState<FileSystemFileHandle | null>(null);
+  const [recent, setRecent] = useState<RecentFile[]>([]);
+  const [recentOpen, setRecentOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [restoreOffer, setRestoreOffer] = useState<AutosaveRecord | null>(null);
   const [autosaveReady, setAutosaveReady] = useState(false);
@@ -58,6 +73,12 @@ export function App() {
   const dirty = useMemo(() => isDirty(doc), [doc]);
   const contingencyLabel = `(+${contingencyToPercent(show.job.contingency)}%)`;
   const dispatchEdit = (action: EditorAction) => dispatch({ type: 'edit', action });
+
+  // Latest values for handlers registered once (launch queue, share target).
+  const latest = useRef({ dirty, title: showTitle(show), restorePending: false });
+  useEffect(() => {
+    latest.current = { dirty, title: showTitle(show), restorePending: restoreOffer !== null };
+  });
 
   // ---- Autosave: offer to restore on start, then keep a copy while there are unsaved changes.
   useEffect(() => {
@@ -83,12 +104,13 @@ export function App() {
               savedFingerprint: doc.savedFingerprint,
               locked: doc.locked,
               show: toShowFile(doc.show, { appVersion: __APP_VERSION__, specVersion: doc.show.spec_version, savedAt: new Date() }),
+              handle,
             })
           : clearAutosave(store);
       write.then(() => setAutosaveFailed(false)).catch(() => setAutosaveFailed(true));
     }, AUTOSAVE_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [doc, dirty, autosaveReady]);
+  }, [doc, dirty, autosaveReady, handle]);
 
   // ---- Warn before leaving with unsaved changes.
   useEffect(() => {
@@ -125,11 +147,23 @@ export function App() {
   });
 
   const confirmDiscard = (what: string) =>
-    !dirty || window.confirm(`${what}? Unsaved changes to ${showTitle(show)} will be lost.`);
+    !latest.current.dirty || window.confirm(`${what}? Unsaved changes to ${latest.current.title} will be lost.`);
 
-  const afterOpen = (file: ShowFile, fileName: string | null, migratedFrom: string | null) => {
+  const rememberRecent = (h: FileSystemFileHandle) => {
+    addRecent(store, h, sameHandle).then(setRecent).catch(() => undefined);
+  };
+
+  const afterOpen = (
+    file: ShowFile,
+    fileName: string | null,
+    migratedFrom: string | null,
+    fileHandle: FileSystemFileHandle | null = null,
+  ) => {
     dispatch({ type: 'open', show: file, fileName });
-    clearAutosave(store).catch(() => setAutosaveFailed(true));
+    setHandle(fileHandle);
+    if (fileHandle) rememberRecent(fileHandle);
+    // Keep an autosave the user has not yet answered the restore question about.
+    if (!latest.current.restorePending) clearAutosave(store).catch(() => setAutosaveFailed(true));
     setView('editor');
     const c = compareWithLibrary(file, libraryByName, library.spec_version);
     setComparison(c.anyDifferences ? c : null);
@@ -140,9 +174,61 @@ export function App() {
     setNotice(parts.length ? parts.join(' ') : null);
   };
 
+  /** Parse text from any source and open it, or explain why not. */
+  const openText = (text: string, fileName: string, fileHandle: FileSystemFileHandle | null) => {
+    const r = parseShowFile(text);
+    if (!r.ok) {
+      setFileError({ title: `Could not open ${fileName}`, message: r.message, details: r.details, unchanged: true });
+      return;
+    }
+    afterOpen(r.show, fileName, r.migratedFrom, fileHandle);
+  };
+
+  /** Open a file the app holds a handle for (picker, recent list, double-click). */
+  const openFromHandle = async (h: FileSystemFileHandle) => {
+    try {
+      if (!(await ensurePermission(h, 'read'))) {
+        setFileError({ title: `Could not open ${h.name}`, message: 'Permission to read the file was not given.', details: [], unchanged: true });
+        return;
+      }
+      const file = await h.getFile();
+      openText(await readFileText(file), file.name, h);
+    } catch (e) {
+      const missing = e instanceof DOMException && e.name === 'NotFoundError';
+      setFileError({
+        title: `Could not open ${h.name}`,
+        message: missing ? 'The file has been moved, renamed or deleted.' : errorText(e, 'The file could not be read.'),
+        details: [],
+        unchanged: true,
+      });
+      if (missing) removeRecent(store, h, sameHandle).then(setRecent).catch(() => undefined);
+    }
+  };
+
+  // ---- Once on start: recent files, double-click to open (installed app), Android share.
+  const startup = useRef({ openText, openFromHandle, confirmDiscard });
+  useEffect(() => {
+    startup.current = { openText, openFromHandle, confirmDiscard };
+  });
+  useEffect(() => {
+    if (fsAccessSupported()) listRecent(store).then(setRecent).catch(() => undefined);
+    onLaunchFile((h) => {
+      if (!startup.current.confirmDiscard(`Open ${h.name}`)) return;
+      void startup.current.openFromHandle(h);
+    });
+    takeSharedFile()
+      .then((shared) => {
+        if (!shared) return;
+        if ('error' in shared) setFileError({ title: 'Could not open the shared file', message: shared.error, details: [], unchanged: true });
+        else startup.current.openText(shared.text, shared.name, null);
+      })
+      .catch(() => undefined);
+  }, []);
+
   const onNew = () => {
     if (!confirmDiscard('Start a new show')) return;
     dispatch({ type: 'new', specVersion: library.spec_version });
+    setHandle(null);
     clearAutosave(store).catch(() => setAutosaveFailed(true));
     setComparison(null);
     setNotice(null);
@@ -151,49 +237,103 @@ export function App() {
 
   const onOpenClick = () => {
     if (!confirmDiscard('Open another show')) return;
-    fileInput.current?.click();
+    if (!fsAccess) {
+      fileInput.current?.click();
+      return;
+    }
+    pickShowToOpen()
+      .then((h) => (h ? openFromHandle(h) : undefined))
+      .catch((e) => setFileError({ title: 'Could not open a file', message: errorText(e, 'The file picker failed.'), details: [], unchanged: true }));
+  };
+
+  const onRecentOpen = (f: RecentFile) => {
+    if (!confirmDiscard(`Open ${f.name}`)) return;
+    setRecentOpen(false);
+    void openFromHandle(f.handle);
   };
 
   const onFileChosen = async (file: File | undefined) => {
     if (fileInput.current) fileInput.current.value = '';
     if (!file) return;
-    let text: string;
     try {
-      text = await readFileText(file);
+      openText(await readFileText(file), file.name, null);
     } catch (e) {
-      setOpenError({ fileName: file.name, message: e instanceof Error ? e.message : 'The file could not be read.', details: [] });
-      return;
+      setFileError({ title: `Could not open ${file.name}`, message: errorText(e, 'The file could not be read.'), details: [], unchanged: true });
     }
-    const r = parseShowFile(text);
-    if (!r.ok) {
-      setOpenError({ fileName: file.name, message: r.message, details: r.details });
-      return;
-    }
-    afterOpen(r.show, file.name, r.migratedFrom);
   };
 
   const onLoadExample = () => {
     if (!confirmDiscard('Load the Ballroom example')) return;
-    afterOpen(exampleShow(), null, null);
+    afterOpen(exampleShow(), null, null, null);
   };
 
-  const onSave = () => {
+  /** The file text to write now, its default name, and the library version it records. */
+  const prepareSave = () => {
     const job = show.job;
-    const fileName = showFileName(job.name, hang.name, job.revision);
+    const defaultName = showFileName(job.name, hang.name, job.revision);
     // The file records the library version its snapshots come from: the current one only
     // when every snapshot matches it, otherwise the version it was opened with.
     const matchesLibrary = !compareWithLibrary(show, libraryByName, library.spec_version).anyDifferences;
     const specVersion = matchesLibrary ? library.spec_version : show.spec_version;
     const file = toShowFile(show, { appVersion: __APP_VERSION__, specVersion, savedAt: new Date() });
-    downloadText(serialiseShow(file), fileName);
+    return { text: serialiseShow(file), defaultName, specVersion };
+  };
+
+  const afterSave = (fileName: string, specVersion: string, message: string) => {
     dispatch({ type: 'saved', fileName, specVersion });
     clearAutosave(store).catch(() => setAutosaveFailed(true));
-    setNotice(`Saved as ${fileName} – check your downloads folder. Keep that file: it is the record.`);
+    setNotice(message);
+  };
+
+  const saveFailed = (e: unknown) =>
+    setFileError({ title: 'The show was not saved', message: errorText(e, 'The file could not be written.'), details: [], unchanged: false });
+
+  /** Layer 2: choose where to save, then keep saving there. */
+  const onSaveAs = async () => {
+    const { text, defaultName, specVersion } = prepareSave();
+    try {
+      const h = await pickSaveLocation(defaultName);
+      if (!h) return;
+      await writeToHandle(h, text);
+      setHandle(h);
+      rememberRecent(h);
+      afterSave(h.name, specVersion, `Saved as ${h.name}. Save will now update this file.`);
+    } catch (e) {
+      saveFailed(e);
+    }
+  };
+
+  const onSave = async () => {
+    if (!fsAccess) {
+      // Layer 1: every browser.
+      const { text, defaultName, specVersion } = prepareSave();
+      downloadText(text, defaultName);
+      afterSave(defaultName, specVersion, `Saved as ${defaultName} – check your downloads folder. Keep that file: it is the record.`);
+      return;
+    }
+    if (!handle) {
+      await onSaveAs();
+      return;
+    }
+    const { text, specVersion } = prepareSave();
+    try {
+      if (!(await ensurePermission(handle, 'readwrite'))) {
+        saveFailed(new Error(`Permission to save to ${handle.name} was not given. Use Save As to choose a file.`));
+        return;
+      }
+      await writeToHandle(handle, text);
+      rememberRecent(handle);
+      afterSave(handle.name, specVersion, `Saved to ${handle.name}.`);
+    } catch (e) {
+      saveFailed(e);
+    }
   };
 
   const onNewRevision = () => {
     const before = show.job.revision;
     dispatch({ type: 'new-revision' });
+    // The original file stays untouched: the revision is saved to a new file.
+    setHandle(null);
     setComparison(null);
     setNotice(
       `New revision created from ${before ? `revision ${before}` : 'the first issue'} as an unsaved draft. ` +
@@ -206,6 +346,7 @@ export function App() {
     if (dirty && !window.confirm('Restoring will replace the show you have started. Continue?')) return;
     const r = restoreOffer;
     dispatch({ type: 'restore', show: r.show, fileName: r.fileName, savedFingerprint: r.savedFingerprint, locked: r.locked });
+    setHandle(r.handle ?? null);
     setRestoreOffer(null);
     setAutosaveReady(true);
     setNotice('Unsaved changes restored. Save the show to keep them in a file.');
@@ -245,9 +386,25 @@ export function App() {
           <button type="button" className="button" onClick={onOpenClick}>
             Open
           </button>
-          <button type="button" className="button primary" onClick={onSave} disabled={doc.locked}>
+          {fsAccess && recent.length ? (
+            <button type="button" className="button" onClick={() => setRecentOpen(true)}>
+              Recent
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className="button primary"
+            onClick={() => void onSave()}
+            disabled={doc.locked}
+            title={handle ? `Save to ${handle.name}` : undefined}
+          >
             Save
           </button>
+          {fsAccess ? (
+            <button type="button" className="button" onClick={() => void onSaveAs()} disabled={doc.locked}>
+              Save As
+            </button>
+          ) : null}
           <button type="button" className="button" onClick={onPrint}>
             Print
           </button>
@@ -277,6 +434,8 @@ export function App() {
           App {__APP_VERSION__} · Spec {library.spec_version}
         </p>
       </header>
+
+      <UpdatePrompt dirty={dirty} />
 
       {restoreOffer ? (
         <section className="banner banner-restore" aria-labelledby="restore-heading">
@@ -401,26 +560,41 @@ export function App() {
         />
       ) : null}
 
-      {openError ? (
+      {fileError ? (
         <Dialog
-          title={`Could not open ${openError.fileName}`}
-          onClose={() => setOpenError(null)}
+          title={fileError.title}
+          onClose={() => setFileError(null)}
           actions={
-            <button type="button" className="button" onClick={() => setOpenError(null)}>
+            <button type="button" className="button" onClick={() => setFileError(null)}>
               OK
             </button>
           }
         >
-          <p>{openError.message}</p>
-          {openError.details.length ? (
+          <p>{fileError.message}</p>
+          {fileError.details.length ? (
             <ul className="error-list">
-              {openError.details.map((d) => (
+              {fileError.details.map((d) => (
                 <li key={d}>{d}</li>
               ))}
             </ul>
           ) : null}
-          <p className="section-hint">Nothing was changed. The show you had open is still open.</p>
+          <p className="section-hint">
+            {fileError.unchanged
+              ? 'Nothing was changed. The show you had open is still open.'
+              : 'Your changes are still here and still unsaved.'}
+          </p>
         </Dialog>
+      ) : null}
+
+      {recentOpen ? (
+        <RecentFilesDialog
+          files={recent}
+          onOpen={onRecentOpen}
+          onRemove={(f) => {
+            removeRecent(store, f.handle, sameHandle).then(setRecent).catch(() => undefined);
+          }}
+          onClose={() => setRecentOpen(false)}
+        />
       ) : null}
 
       <footer className="app-footer">
@@ -429,8 +603,11 @@ export function App() {
           dynamic, derating or safety factor is applied.
         </p>
         <p>
-          Show files stay on your device: Open reads a file you choose and Save downloads one. Autosave keeps a copy in this
-          browser only, as a safety net – the saved file is the record.
+          Show files stay on your device.{' '}
+          {fsAccess
+            ? 'Open reads a file you choose; Save writes back to that file and Save As chooses a new one.'
+            : 'Open reads a file you choose and Save downloads one.'}{' '}
+          Autosave keeps a copy in this browser only, as a safety net – the saved file is the record.
         </p>
       </footer>
     </div>

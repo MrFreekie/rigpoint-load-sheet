@@ -2,7 +2,7 @@
 
 A static web app that calculates and documents the load on a single flown loudspeaker hang, replacing the `The_Ballroom_Array_Weights_v6.xlsx` workbook. Everything runs in the browser: no server, no accounts, no tracking. Show files never leave your device unless you move them.
 
-> **Status:** phase 4 of 5 – calculation engine, editing interface, show files and the printed Load Sheet. Offline use and desktop save-in-place come in phase 5. See `BRIEF.md` for the full plan.
+> **Status:** phase 5 of 5 – calculation engine, editing interface, show files, the printed Load Sheet, offline use and desktop save-in-place. See `BRIEF.md` for the full plan.
 
 **Live site:** https://mrfreekie.github.io/rigpoint-load-sheet/
 
@@ -34,6 +34,7 @@ npm run ci
 | `npm run e2e` | Playwright end-to-end tests on Chromium, Firefox, iPhone SE (WebKit) and Android, against the production build, including the one-page print checks. Run `npx playwright install` once first |
 | `npm run validate:spec` | Spec library validation and the `spec_version` check |
 | `npm run reference` | Runs the Python reference engine against the scenarios |
+| `npm run icons` | Renders `public/favicon.svg` into the PNG app icons. Run after changing the SVG; the PNGs are committed |
 
 ### Layout
 
@@ -42,7 +43,8 @@ npm run ci
 | `src/engine/` | Pure calculation: `calculate(hang, contingency)` |
 | `src/schema/` | Zod schemas for the Spec library and show files, with plain-English errors |
 | `src/print/` | The Load Sheet print view, its stylesheet and the fixed small print |
-| `src/files/` | Open, save, autosave, migrations and compare-on-open |
+| `src/files/` | Open, save, save in place, recent files, autosave, migrations and compare-on-open |
+| `src/sw.ts` | The service worker: offline precache and the Android share target |
 | `e2e/` | Playwright end-to-end tests |
 | `src/ui/` | React editing interface; displays engine results and calculates nothing itself |
 | `src/testing/` | Test helpers: fixture loading and seeded random hangs |
@@ -64,6 +66,14 @@ A show is saved as `<Job> - <Hang>.loadsheet.json` (with ` - Rev B` added once i
 - **Autosave** keeps a copy of unsaved changes in this browser only, as a safety net. The saved file is the record.
 - **Compare on open** lists any item whose weight, per or SWL differs from the current Spec library. Nothing changes unless you choose *Update selected*.
 - **Approved and superseded** shows open read-only. *Create new revision* makes an editable draft copy with the next revision letter (blank, A, B, …), saved under a new name.
+
+## Install, offline and desktop saving
+
+- **Install and offline.** In Chrome or Edge, use *Install* in the address bar (on Android, *Add to home screen*). Once the app has loaded, it and the Spec library are stored in the browser and it works with no network, installed or not. It says "Ready to work offline" the first time.
+- **Save, Save As and Recent (Chrome and Edge desktop).** *Save As* chooses a file; after that, *Save* writes straight back to it instead of downloading a copy. Opening a file there does the same. *Recent* lists the last few show files you opened or saved, so you can reopen them without hunting through folders; the browser may ask again for permission to use a file. Other browsers keep the download behaviour described above.
+- **Double-click to open.** With the app installed on Chrome or Edge desktop, `.loadsheet.json` files can open in it directly from your file manager.
+- **Sharing from Android.** With the app installed on Android, share a show file from another app (email, a file manager, a chat) and choose Load Sheet to open it.
+- **Updates.** A new version never replaces the app in the middle of an edit. When one is ready the app shows *Update available – reload*; choose *Reload* when it suits you. Unsaved changes are kept by autosave and offered back after the reload.
 
 ## Printing the Load Sheet
 

@@ -12,6 +12,8 @@ export interface AutosaveRecord {
   savedFingerprint: string;
   locked: boolean;
   show: ShowFile;
+  /** The file to save back to (Chrome and Edge desktop). File handles can be stored in IndexedDB. */
+  handle?: FileSystemFileHandle | null;
 }
 
 /** The storage the autosave needs; IndexedDB in the app, a Map in tests. */
@@ -54,6 +56,7 @@ export async function readAutosave(store: KeyValueStore): Promise<AutosaveRecord
     (raw.fileName === null || typeof raw.fileName === 'string') &&
     typeof raw.savedFingerprint === 'string' &&
     typeof raw.locked === 'boolean' &&
+    (raw.handle === undefined || raw.handle === null || typeof raw.handle === 'object') &&
     show.success;
   if (!valid) {
     await store.del(KEY);
