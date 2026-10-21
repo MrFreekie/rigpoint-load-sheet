@@ -51,8 +51,10 @@ describe.skipIf(!python)('agrees with engine_reference.py', () => {
   });
 
   const ref: RefResult[] = run.status === 0 ? (JSON.parse(run.stdout) as RefResult[]) : [];
-  // The engine sums in the same order as the reference, so results match bit for bit.
-  const close = (a: number, b: number) => a === b;
+  // Same summation order as the reference, so on Python ≤ 3.11 results match bit for bit.
+  // Python 3.12+ sum() uses compensated summation and can differ in the last bit, hence
+  // a relative tolerance far below anything that could change a displayed figure.
+  const close = (a: number, b: number) => Math.abs(a - b) <= 1e-12 * Math.max(1, Math.abs(a), Math.abs(b));
 
   it.each(cases.map((c, i) => [c.seed, i] as const))('seed %i', (seed, i) => {
     const c = cases[i]!;
