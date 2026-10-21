@@ -1,8 +1,11 @@
 name: CI
 
 on:
+  # main is checked by deploy.yml, which runs this workflow before publishing.
   push:
+    branches-ignore: [main]
   pull_request:
+  workflow_call:
 
 permissions:
   contents: read

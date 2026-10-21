@@ -68,12 +68,19 @@ export function DateField({
   label,
   value,
   onChange,
+  hint,
   className,
 }: FieldShell & { value: string | null; onChange: (v: string | null) => void }) {
   const id = useId();
   return (
-    <Shell id={id} label={label} className={className}>
-      <input id={id} type="date" value={value ?? ''} onChange={(e) => onChange(e.target.value || null)} />
+    <Shell id={id} label={label} hint={hint} className={className}>
+      <input
+        id={id}
+        type="date"
+        value={value ?? ''}
+        aria-describedby={hint ? `${id}-hint` : undefined}
+        onChange={(e) => onChange(e.target.value || null)}
+      />
     </Shell>
   );
 }

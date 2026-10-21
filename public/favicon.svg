@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>RigPoint Load Sheet</title>
+  <rect width="512" height="512" rx="96" fill="#0b2545"/>
+  <!-- truss -->
+  <rect x="96" y="104" width="320" height="28" rx="6" fill="#f2c230"/>
+  <!-- chain -->
+  <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round">
+    <rect x="240" y="132" width="32" height="56" rx="16"/>
+    <rect x="240" y="180" width="32" height="56" rx="16"/>
+  </g>
+  <!-- array of boxes -->
+  <g fill="#ffffff">
+    <rect x="176" y="248" width="160" height="40" rx="6"/>
+    <rect x="182" y="296" width="150" height="40" rx="6" transform="rotate(3 257 316)"/>
+    <rect x="192" y="344" width="138" height="40" rx="6" transform="rotate(7 261 364)"/>
+    <rect x="206" y="392" width="124" height="38" rx="6" transform="rotate(12 268 411)"/>
+  </g>
+</svg>

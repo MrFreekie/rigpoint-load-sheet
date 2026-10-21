@@ -13,9 +13,22 @@ export const librarySpecVersion = (
   JSON.parse(readFileSync(new URL('../data/spec-library.json', import.meta.url), 'utf8')) as { spec_version: string }
 ).spec_version;
 
-/** Open the app with a clean slate. Confirmations and leave-page prompts are accepted. */
-export async function start(page: Page) {
+/**
+ * Open the app with a clean slate. Confirmations and leave-page prompts are accepted.
+ * By default the File System Access API is hidden, so Chromium uses layer 1 (file input and
+ * download) like every other browser; pass fsAccess to keep it.
+ */
+export async function start(page: Page, opts: { fsAccess?: boolean } = {}) {
   page.on('dialog', (d) => void d.accept());
+  if (!opts.fsAccess) {
+    await page.addInitScript(() => {
+      // Operations on the global object are own properties of window, not of Window.prototype.
+      for (const o of [window, Window.prototype] as unknown as Record<string, unknown>[]) {
+        delete o.showOpenFilePicker;
+        delete o.showSaveFilePicker;
+      }
+    });
+  }
   await page.goto('./');
   await expect(page.getByRole('button', { name: 'Open', exact: true })).toBeVisible();
 }

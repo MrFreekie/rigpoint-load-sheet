@@ -1,7 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
-const BASE = `http://localhost:${PORT}/rigpoint-load-sheet/`;
+/** Set E2E_BASE_URL to test a deployed site, e.g. https://mrfreekie.github.io/rigpoint-load-sheet/ */
+const LIVE = process.env.E2E_BASE_URL;
+const BASE = LIVE ?? `http://localhost:${PORT}/rigpoint-load-sheet/`;
 
 export default defineConfig({
   testDir: 'e2e',
@@ -22,10 +24,14 @@ export default defineConfig({
     { name: 'android', use: { ...devices['Pixel 7'] } },
   ],
   // Tests run against the production build, with its Content Security Policy.
-  webServer: {
-    command: `npm run build && npm run preview -- --port ${PORT} --strictPort`,
-    url: BASE,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  ...(LIVE
+    ? {}
+    : {
+        webServer: {
+          command: `npm run build && npm run preview -- --port ${PORT} --strictPort`,
+          url: BASE,
+          reuseExistingServer: !process.env.CI,
+          timeout: 120_000,
+        },
+      }),
 });

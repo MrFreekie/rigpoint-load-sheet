@@ -3,10 +3,10 @@
 
 import { ShowFileSchema, type ShowFile } from '../schema/show-file';
 import { formatIssues } from '../schema/errors';
+import { MAX_FILE_BYTES } from './limits';
 import { migrate, MigrationError } from './migrations';
 
-/** Show files are a few kilobytes; anything far bigger is not one. */
-export const MAX_FILE_BYTES = 5 * 1024 * 1024;
+export { MAX_FILE_BYTES };
 
 export type OpenResult =
   | { ok: true; show: ShowFile; migratedFrom: string | null }
