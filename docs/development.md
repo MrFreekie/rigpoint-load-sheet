@@ -2,7 +2,7 @@
 
 Notes for anyone changing the code or the equipment list. If you only use the app, see the [user guide](user-guide.md) instead.
 
-`BRIEF.md` is the full specification. All five phases in it are built. The workbook in `reference/` is the source of truth for the calculation: where the brief and the workbook disagree, ask before changing anything.
+The app was built from a build brief that the owner keeps privately. Code comments such as "BRIEF.md section 10" refer to sections of that brief; ask the owner if you need it. The workbook in `reference/` is the source of truth for the calculation: where it and the code disagree, ask before changing anything.
 
 ## Ground rules
 

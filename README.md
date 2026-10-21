@@ -58,7 +58,7 @@ Every weight and rating comes from the built-in equipment list, which you can br
 
 ## For developers
 
-Setup, commands, tests and how releases work are in [docs/development.md](docs/development.md). `BRIEF.md` is the full specification.
+Setup, commands, tests and how releases work are in [docs/development.md](docs/development.md).
 
 ## Disclaimer
 
