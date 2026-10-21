@@ -23,6 +23,7 @@ import { LibraryViewer } from './LibraryViewer';
 import { RecentFilesDialog } from './RecentFilesDialog';
 import { HangPanel, JobPanel } from './Panels';
 import { SummaryPanel } from './SummaryPanel';
+import { ThemeButton } from './ThemeButton';
 import { TrafficLight } from './TrafficLight';
 import { UpdatePrompt } from './UpdatePrompt';
 import { ZoneCard } from './ZoneCard';
@@ -422,6 +423,7 @@ export function App() {
           >
             {view === 'library' ? 'Back to show' : 'Library'}
           </button>
+          <ThemeButton />
           <input
             ref={fileInput}
             type="file"
