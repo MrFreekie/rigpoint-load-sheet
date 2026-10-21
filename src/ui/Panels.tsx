@@ -43,6 +43,11 @@ export function JobPanel({ job, dispatch }: { job: EditorShow['job']; dispatch: 
           hint="Unlisted items and measurement error. Not a safety factor."
         />
       </div>
+      {job.status === 'approved' || job.status === 'superseded' ? (
+        <p className="field-hint" role="status">
+          Once saved with this status, the show opens read-only. Changes then need a new revision.
+        </p>
+      ) : null}
       {job.contingency === 0 ? (
         <p className="warning" role="status">
           ⚠ {WARNING_MESSAGES.contingency_zero}

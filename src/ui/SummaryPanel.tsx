@@ -12,10 +12,12 @@ interface Props {
   hang: EditorHang;
   result: HangResult;
   contingencyLabel: string;
+  /** Approved or superseded: the point inputs are read-only. */
+  locked: boolean;
   dispatch: Dispatch<EditorAction>;
 }
 
-export function SummaryPanel({ hang, result: r, contingencyLabel, dispatch }: Props) {
+export function SummaryPanel({ hang, result: r, contingencyLabel, locked, dispatch }: Props) {
   // Collapsible on narrow screens only; on desktop the CSS keeps the body visible.
   const [open, setOpen] = useState(false);
   const pc = hang.point_capacity;
@@ -101,7 +103,8 @@ export function SummaryPanel({ hang, result: r, contingencyLabel, dispatch }: Pr
             </div>
           </dl>
 
-          <div className="grid point-inputs">
+          <fieldset className="lock grid point-inputs" disabled={locked}>
+            <legend className="visually-hidden">Stated point capacity</legend>
             <NumberField
               label="Stated point capacity"
               unit="kg"
@@ -130,7 +133,7 @@ export function SummaryPanel({ hang, result: r, contingencyLabel, dispatch }: Pr
               ]}
               onChange={(v) => dispatch({ type: 'point', field: 'print', value: v })}
             />
-          </div>
+          </fieldset>
 
           <p className={pointWarn ? 'warning' : 'point-status'} role="status">
             {r.point_used !== null ? (

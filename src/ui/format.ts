@@ -41,8 +41,12 @@ export function contingencyToPercent(fraction: number): number {
   return Number((fraction * 100).toFixed(6));
 }
 
-/** File name: "<Job> - <Hang>.loadsheet.json" with characters illegal in file names removed. */
-export function showFileName(job: string, hang: string): string {
+/**
+ * File name: "<Job> - <Hang>.loadsheet.json" with characters illegal in file names removed.
+ * A revision, when there is one, is added ("… - Rev B.loadsheet.json") so each revision
+ * is saved under its own name and the earlier file stays untouched (BRIEF.md 8.5).
+ */
+export function showFileName(job: string, hang: string, revision = ''): string {
   const clean = (s: string) =>
     s
       .replace(/[<>:"/\\|?*]/g, '')
@@ -51,5 +55,6 @@ export function showFileName(job: string, hang: string): string {
       .trim()
       .replace(/[. ]+$/, '');
   const parts = [clean(job), clean(hang)].filter(Boolean);
-  return `${parts.length ? parts.join(' - ') : 'Untitled'}.loadsheet.json`;
+  const rev = clean(revision);
+  return `${parts.length ? parts.join(' - ') : 'Untitled'}${rev ? ` - Rev ${rev}` : ''}.loadsheet.json`;
 }

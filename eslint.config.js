@@ -45,7 +45,7 @@ export default tseslint.config(
   },
   {
     // Tests may read fixtures from disk.
-    files: ['src/**/*.test.ts'],
+    files: ['src/**/*.test.ts', 'e2e/**/*.ts'],
     rules: { 'no-restricted-imports': 'off', '@typescript-eslint/no-non-null-assertion': 'off' },
   },
 );

@@ -41,6 +41,8 @@ describe('formatting', () => {
     expect(showFileName('The Ballroom', 'Main Hang Left')).toBe('The Ballroom - Main Hang Left.loadsheet.json');
     expect(showFileName('A/B: "C"?', ' ')).toBe('AB C.loadsheet.json');
     expect(showFileName('', '')).toBe('Untitled.loadsheet.json');
+    expect(showFileName('The Ballroom', 'Main Hang Left', 'B')).toBe('The Ballroom - Main Hang Left - Rev B.loadsheet.json');
+    expect(showFileName('The Ballroom', 'Main Hang Left', ' ')).toBe('The Ballroom - Main Hang Left.loadsheet.json');
   });
 });
 

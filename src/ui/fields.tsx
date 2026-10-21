@@ -10,19 +10,19 @@ interface FieldShell {
   context?: string | undefined;
 }
 
-export function FieldLabel({ htmlFor, label, context }: { htmlFor: string; label: string; context?: string | undefined }) {
-  return (
-    <label htmlFor={htmlFor}>
-      {label}
-      {context ? <span className="visually-hidden">, {context}</span> : null}
-    </label>
-  );
+export function FieldLabel({ htmlFor, label }: { htmlFor: string; label: string }) {
+  return <label htmlFor={htmlFor}>{label}</label>;
 }
 
-function Shell({ id, label, hint, className, context, error, children }: FieldShell & { id: string; error?: string | null; children: ReactNode }) {
+/** Accessible name with screen-reader context, e.g. "Qty, Hoist row 2"; undefined uses the visible label. */
+export function contextName(label: string, context: string | undefined): string | undefined {
+  return context ? `${label}, ${context}` : undefined;
+}
+
+function Shell({ id, label, hint, className, error, children }: FieldShell & { id: string; error?: string | null; children: ReactNode }) {
   return (
     <div className={`field ${className ?? ''}`}>
-      <FieldLabel htmlFor={id} label={label} context={context} />
+      <FieldLabel htmlFor={id} label={label} />
       {children}
       {error ? (
         <p className="field-error" id={`${id}-error`} role="alert">
@@ -56,6 +56,7 @@ export function TextField({
         value={value}
         placeholder={placeholder}
         disabled={disabled}
+        aria-label={contextName(label, context)}
         aria-describedby={hint ? `${id}-hint` : undefined}
         onChange={(e) => onChange(e.target.value)}
       />
@@ -158,6 +159,7 @@ export function NumberField({ label, context, value, onChange, min = 0, max, int
           value={draft}
           placeholder={placeholder}
           disabled={disabled}
+          aria-label={contextName(label, context)}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
           onChange={(e) => {

@@ -3,7 +3,7 @@
 import { useId, useMemo, useRef, useState } from 'react';
 import { library } from '../library';
 import type { SpecItem } from '../schema/spec-library';
-import { FieldLabel } from './fields';
+import { contextName, FieldLabel } from './fields';
 import { formatSpecKg, formatSwl } from './format';
 import { searchItems } from './item-search';
 
@@ -51,12 +51,13 @@ export function ItemPicker({ label, context, value, onSelect, disabled }: Props)
 
   return (
     <div className="field item-picker">
-      <FieldLabel htmlFor={id} label={label} context={context} />
+      <FieldLabel htmlFor={id} label={label} />
       <div className="picker-control">
         <input
           id={id}
           type="text"
           role="combobox"
+          aria-label={contextName(label, context)}
           aria-autocomplete="list"
           aria-expanded={open}
           aria-controls={listId}

@@ -145,8 +145,12 @@ select {
   letter-spacing: 0.02em;
 }
 
-.show-title {
+.show-heading {
   flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.show-title {
   margin: 0;
   font-weight: 600;
   overflow: hidden;
@@ -1107,4 +1111,200 @@ input[aria-invalid='true'] {
     color: var(--muted);
     text-align: left;
   }
+}
+
+/* ---------- Files: header state, banners, dialogs, lock ---------- */
+
+.file-state {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.unsaved {
+  color: var(--warn-text);
+  background: var(--flag-bg);
+  padding: 0 0.4rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.saved {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.mini-unsaved {
+  color: var(--warn-text);
+}
+
+.button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.link-button {
+  border: 0;
+  background: none;
+  padding: 0.25rem;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+  min-height: auto;
+}
+
+fieldset.lock {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+fieldset.lock[disabled] .add-row,
+fieldset.lock[disabled] .row-actions {
+  display: none;
+}
+
+.banner {
+  margin: 0 0 var(--gap);
+  padding: 0.9rem 1rem;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.banner h2 {
+  font-size: 1.1rem;
+}
+
+.banner p {
+  margin: 0.4rem 0 0;
+}
+
+.banner-restore {
+  border-color: var(--accent);
+}
+
+.banner-locked {
+  border-color: var(--warn-border);
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}
+
+.banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.notice {
+  margin: 0 0 var(--gap);
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid var(--accent);
+  background: var(--surface);
+}
+
+.app > .warning {
+  margin: 0 0 var(--gap);
+}
+
+.dialog {
+  width: min(44rem, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 1rem;
+  flex-direction: column;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.dialog[open] {
+  display: flex;
+}
+
+.dialog-body {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.compare-unchanged-group {
+  margin-top: 0.75rem;
+}
+
+.compare-unchanged-group summary {
+  min-height: var(--touch);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+
+.dialog h2 {
+  font-size: 1.15rem;
+}
+
+.dialog-body {
+  margin-top: 0.75rem;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.compare-list,
+.error-list {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.compare-list li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-list .checkbox {
+  align-items: flex-start;
+  font-weight: 400;
+}
+
+.compare-list .checkbox input {
+  margin-top: 0.15rem;
+  flex: none;
+}
+
+.compare-unchanged {
+  color: var(--muted);
+}
+
+.compare-removed strong,
+.compare-changed strong {
+  color: var(--text);
+}
+
+.compare-rows {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.error-list li {
+  padding: 0.25rem 0;
+  font-weight: 600;
+  color: var(--danger);
 }

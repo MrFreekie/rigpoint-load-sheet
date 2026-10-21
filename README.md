@@ -2,7 +2,7 @@
 
 A static web app that calculates and documents the load on a single flown loudspeaker hang, replacing the `The_Ballroom_Array_Weights_v6.xlsx` workbook. Everything runs in the browser: no server, no accounts, no tracking. Show files never leave your device unless you move them.
 
-> **Status:** phase 2 of 5 – calculation engine and editing interface. Opening and saving show files, printing and offline use come in later phases. See `BRIEF.md` for the full plan.
+> **Status:** phase 3 of 5 – calculation engine, editing interface and show files (open, save, autosave, compare with the library, approval lock). Printing and offline use come in later phases. See `BRIEF.md` for the full plan.
 
 ## What it calculates
 
@@ -29,6 +29,7 @@ npm run ci
 | `npm run typecheck` | TypeScript, strict mode |
 | `npm run lint` | ESLint, including a rule that keeps the engine free of DOM and storage code |
 | `npm test` | Engine scenarios, unit, property and differential tests; schema tests |
+| `npm run e2e` | Playwright end-to-end tests on Chromium, Firefox, iPhone SE (WebKit) and Android, against the production build. Run `npx playwright install` once first |
 | `npm run validate:spec` | Spec library validation and the `spec_version` check |
 | `npm run reference` | Runs the Python reference engine against the scenarios |
 
@@ -38,6 +39,8 @@ npm run ci
 |---|---|
 | `src/engine/` | Pure calculation: `calculate(hang, contingency)` |
 | `src/schema/` | Zod schemas for the Spec library and show files, with plain-English errors |
+| `src/files/` | Open, save, autosave, migrations and compare-on-open |
+| `e2e/` | Playwright end-to-end tests |
 | `src/ui/` | React editing interface; displays engine results and calculates nothing itself |
 | `src/testing/` | Test helpers: fixture loading and seeded random hangs |
 | `data/spec-library.json` | Equipment library. Changes go through pull requests – see `CONTRIBUTING.md` |
@@ -50,6 +53,14 @@ npm run ci
 - **Unit tests** – LEN?, TBC, quantity 0, empty zones, note-only rows, items no longer in the library, contingency 0, ties, traffic lights, point capacity and rounding.
 - **Property test** – increasing any row's quantity never decreases any utilisation (500 random hangs).
 - **Differential test** – 400 random hangs built from the real library are run through both the TypeScript engine and `reference/engine_reference.py`; every value must match exactly.
+
+## Show files
+
+A show is saved as `<Job> - <Hang>.loadsheet.json` (with ` - Rev B` added once it has a revision). Open reads a file you choose; Save downloads one. Files never leave your device unless you move them, so keep them in a folder your cloud service already syncs if you want them backed up.
+
+- **Autosave** keeps a copy of unsaved changes in this browser only, as a safety net. The saved file is the record.
+- **Compare on open** lists any item whose weight, per or SWL differs from the current Spec library. Nothing changes unless you choose *Update selected*.
+- **Approved and superseded** shows open read-only. *Create new revision* makes an editable draft copy with the next revision letter (blank, A, B, …), saved under a new name.
 
 ## Disclaimer
 
