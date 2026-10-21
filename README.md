@@ -4,7 +4,7 @@ Work out the load on a flown loudspeaker hang and print a Load Sheet for it, on 
 
 **Open the app:** https://mrfreekie.github.io/rigpoint-load-sheet/
 
-It replaces the `The_Ballroom_Array_Weights_v6.xlsx` spreadsheet and gives the same answers. There is nothing to sign up for. Everything runs on your own device, and your show files never leave it unless you move them.
+There is nothing to sign up for. Everything runs on your own device, and your show files never leave it unless you move them.
 
 ## What it does
 
@@ -14,7 +14,7 @@ You list everything on one hang, from the connection point down: top rigging, ho
 - names the **governing component**, the item working hardest, with a green OK, amber CHECK or red OVER
 - gives the **static load at the point**, unfactored, for the venue or structural engineer
 - flags any item with a missing weight, so you know when the total is too low
-- prints a one-page A4 **Load Sheet** with signature boxes, laid out like the spreadsheet's
+- prints a one-page A4 **Load Sheet** with signature boxes
 
 All weights are in kilograms. Ratings are used exactly as the manufacturer states them, with no extra factors.
 

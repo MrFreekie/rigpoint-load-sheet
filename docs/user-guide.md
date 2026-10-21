@@ -1,6 +1,6 @@
 # User guide
 
-RigPoint Load Sheet works out the load on one flown loudspeaker hang and prints a signed Load Sheet for it. It does the same job as the Ballroom Array Weights spreadsheet, and gives the same answers.
+RigPoint Load Sheet works out the load on one flown loudspeaker hang and prints a Load Sheet for it, ready to check and sign.
 
 Open it at **https://mrfreekie.github.io/rigpoint-load-sheet/**
 
@@ -242,7 +242,7 @@ To change an approved show, press **Create new revision**. The app makes an edit
 
 ## Printing the Load Sheet
 
-Press **Print**. The app lays out the Load Sheet on one A4 portrait page, in the same layout as the spreadsheet's Load Sheet tab:
+Press **Print**. The app lays out the Load Sheet on one A4 portrait page:
 
 - the job and hang details
 - every item, grouped by zone, with spare ruled lines for pencilled additions on site
