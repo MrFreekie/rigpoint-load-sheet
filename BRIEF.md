@@ -248,7 +248,7 @@ The app loads the library at build time, bundled, so it works offline.
   "app_version": "0.1.0",
   "spec_version": "2026-10-21",
   "saved_at": "2026-10-21T16:00:00+01:00",
-  "job": { "name": "The Ballroom", "date": null, "designer": "Mark Hughes",
+  "job": { "name": "The Ballroom", "date": null, "designer": "",
            "venue": "", "status": "draft", "revision": "",
            "contingency": 0.05, "sheet_date": null },
   "hangs": [{
