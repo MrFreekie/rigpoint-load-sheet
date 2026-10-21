@@ -1,0 +1,1360 @@
+{
+  "source": "The_Ballroom_Array_Weights_v6.xlsx, recalculated per scenario",
+  "scenarios": [
+    {
+      "id": "A",
+      "title": "Ballroom baseline – body down",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_down",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": null,
+          "source": "",
+          "conditions": "",
+          "print": false
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Crosby S-209T Theatrical Shackle 3¼t",
+              "length_m": null,
+              "qty": 3
+            },
+            {
+              "note": "Master Link",
+              "item": "Grade 80 Masterlink ML/A16 2.5t WLL",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 12
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 444.662,
+        "design_load_point": 466.895,
+        "data_ok": false,
+        "governing_item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+        "governing_used": 0.4669,
+        "governing_ties": 0,
+        "zone_used": {
+          "top_rigging": 0.3648,
+          "hoist": 0.4669,
+          "hook": 0.1499,
+          "path1": 0.4115,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Grade 80 Masterlink ML/A16 2.5t WLL",
+          "path1": "L-Acoustics M-BAR",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "for_approval",
+        "point_used": null
+      }
+    },
+    {
+      "id": "B",
+      "title": "Body up – hoist weight moves to top rigging",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_up",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": null,
+          "source": "",
+          "conditions": "",
+          "print": false
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Crosby S-209T Theatrical Shackle 3¼t",
+              "length_m": null,
+              "qty": 3
+            },
+            {
+              "note": "Master Link",
+              "item": "Grade 80 Masterlink ML/A16 2.5t WLL",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 12
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 444.662,
+        "design_load_point": 466.895,
+        "data_ok": false,
+        "governing_item": "L-Acoustics M-BAR",
+        "governing_used": 0.4115,
+        "governing_ties": 0,
+        "zone_used": {
+          "top_rigging": 0.3648,
+          "hoist": 0.3773,
+          "hook": 0.1499,
+          "path1": 0.4115,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Grade 80 Masterlink ML/A16 2.5t WLL",
+          "path1": "L-Acoustics M-BAR",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "for_approval",
+        "point_used": null
+      }
+    },
+    {
+      "id": "C1",
+      "title": "16 boxes – hoist still governs",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_down",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": null,
+          "source": "",
+          "conditions": "",
+          "print": false
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Crosby S-209T Theatrical Shackle 3¼t",
+              "length_m": null,
+              "qty": 3
+            },
+            {
+              "note": "Master Link",
+              "item": "Grade 80 Masterlink ML/A16 2.5t WLL",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 16
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 548.662,
+        "design_load_point": 576.095,
+        "data_ok": false,
+        "governing_item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+        "governing_used": 0.5761,
+        "governing_ties": 0,
+        "zone_used": {
+          "top_rigging": 0.4501,
+          "hoist": 0.5761,
+          "hook": 0.1936,
+          "path1": 0.5384,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Grade 80 Masterlink ML/A16 2.5t WLL",
+          "path1": "L-Acoustics M-BAR",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "for_approval",
+        "point_used": null
+      }
+    },
+    {
+      "id": "C2",
+      "title": "30 boxes – bumper at 98.4% (stress test, not a real array)",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_down",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": null,
+          "source": "",
+          "conditions": "",
+          "print": false
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Crosby S-209T Theatrical Shackle 3¼t",
+              "length_m": null,
+              "qty": 3
+            },
+            {
+              "note": "Master Link",
+              "item": "Grade 80 Masterlink ML/A16 2.5t WLL",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 30
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 912.662,
+        "design_load_point": 958.295,
+        "data_ok": false,
+        "governing_item": "L-Acoustics M-BUMP",
+        "governing_used": 0.9844,
+        "governing_ties": 0,
+        "zone_used": {
+          "top_rigging": 0.7487,
+          "hoist": 0.9583,
+          "hook": 0.3465,
+          "path1": 0.9844,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Grade 80 Masterlink ML/A16 2.5t WLL",
+          "path1": "L-Acoustics M-BUMP",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "for_approval",
+        "point_used": null
+      }
+    },
+    {
+      "id": "C3",
+      "title": "31 boxes – bumper over 100% (stress test, not a real array)",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_down",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": null,
+          "source": "",
+          "conditions": "",
+          "print": false
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Crosby S-209T Theatrical Shackle 3¼t",
+              "length_m": null,
+              "qty": 3
+            },
+            {
+              "note": "Master Link",
+              "item": "Grade 80 Masterlink ML/A16 2.5t WLL",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 31
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 938.662,
+        "design_load_point": 985.595,
+        "data_ok": false,
+        "governing_item": "L-Acoustics M-BUMP",
+        "governing_used": 1.0172,
+        "governing_ties": 0,
+        "zone_used": {
+          "top_rigging": 0.77,
+          "hoist": 0.9856,
+          "hook": 0.3574,
+          "path1": 1.0172,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Grade 80 Masterlink ML/A16 2.5t WLL",
+          "path1": "L-Acoustics M-BUMP",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "for_approval",
+        "point_used": null
+      }
+    },
+    {
+      "id": "D",
+      "title": "Tie – two identical 822 kg steels at the junction, body up",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_up",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": null,
+          "source": "",
+          "conditions": "",
+          "print": false
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Wire rope sling 8mm 822 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            },
+            {
+              "note": "Master Link",
+              "item": "Wire rope sling 8mm 822 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 12
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 442.302,
+        "design_load_point": 464.417,
+        "data_ok": false,
+        "governing_item": "Wire rope sling 8mm 822 Kg SWL EN13414-1:2003",
+        "governing_used": 0.456,
+        "governing_ties": 1,
+        "zone_used": {
+          "top_rigging": 0.3628,
+          "hoist": 0.3748,
+          "hook": 0.456,
+          "path1": 0.4115,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Wire rope sling 8mm 822 Kg SWL EN13414-1:2003",
+          "path1": "L-Acoustics M-BAR",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "for_approval",
+        "point_used": null
+      }
+    },
+    {
+      "id": "E",
+      "title": "Stated point 500 kg with no source",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_down",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": 500,
+          "source": "",
+          "conditions": "",
+          "print": true
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Crosby S-209T Theatrical Shackle 3¼t",
+              "length_m": null,
+              "qty": 3
+            },
+            {
+              "note": "Master Link",
+              "item": "Grade 80 Masterlink ML/A16 2.5t WLL",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 12
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 444.662,
+        "design_load_point": 466.895,
+        "data_ok": false,
+        "governing_item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+        "governing_used": 0.4669,
+        "governing_ties": 0,
+        "zone_used": {
+          "top_rigging": 0.3648,
+          "hoist": 0.4669,
+          "hook": 0.1499,
+          "path1": 0.4115,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Grade 80 Masterlink ML/A16 2.5t WLL",
+          "path1": "L-Acoustics M-BAR",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "no_source",
+        "point_used": 0.9338
+      }
+    },
+    {
+      "id": "F",
+      "title": "Stated point 1,000 kg with source and conditions",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_down",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": 1000,
+          "source": "Venue rigging plot rev C",
+          "conditions": "Vertical only",
+          "print": true
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Crosby S-209T Theatrical Shackle 3¼t",
+              "length_m": null,
+              "qty": 3
+            },
+            {
+              "note": "Master Link",
+              "item": "Grade 80 Masterlink ML/A16 2.5t WLL",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 12
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 444.662,
+        "design_load_point": 466.895,
+        "data_ok": false,
+        "governing_item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+        "governing_used": 0.4669,
+        "governing_ties": 0,
+        "zone_used": {
+          "top_rigging": 0.3648,
+          "hoist": 0.4669,
+          "hook": 0.1499,
+          "path1": 0.4115,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Grade 80 Masterlink ML/A16 2.5t WLL",
+          "path1": "L-Acoustics M-BAR",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "recorded",
+        "point_used": 0.4669
+      }
+    },
+    {
+      "id": "G",
+      "title": "Steel weight filled in (data check clears)",
+      "contingency": 0.05,
+      "hang": {
+        "name": "Main Hang Left",
+        "point_id": "",
+        "over_people": null,
+        "hoist_orientation": "body_down",
+        "top_rigging_included": true,
+        "point_capacity": {
+          "kg": null,
+          "source": "",
+          "conditions": "",
+          "print": false
+        },
+        "zones": {
+          "top_rigging": [
+            {
+              "note": "Steel",
+              "item": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+              "length_m": 1,
+              "qty": 1
+            }
+          ],
+          "hoist": [
+            {
+              "note": "Hoist",
+              "item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain",
+              "item": "CM 7.92 x 21.80 1 Fall",
+              "length_m": 20,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Chain Bag",
+              "item": null,
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power",
+              "item": "H07RN-F 4x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control",
+              "item": "H07RN-F 3x 2.5mm²",
+              "length_m": 8,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Control Connector",
+              "item": "PCE Midnight IP44 Shark 16A Plug 3 Pole",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Hoist Power Connector",
+              "item": "PCE Midnight IP44 Shark 16A Socket 4 Pole",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "hook": [
+            {
+              "note": "Shackles",
+              "item": "Crosby S-209T Theatrical Shackle 3¼t",
+              "length_m": null,
+              "qty": 3
+            },
+            {
+              "note": "Master Link",
+              "item": "Grade 80 Masterlink ML/A16 2.5t WLL",
+              "length_m": null,
+              "qty": 1
+            }
+          ],
+          "path1": [
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BAR",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Rigging Frame",
+              "item": "L-Acoustics M-BUMP",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Mid Hi Box",
+              "item": "L-Acoustics KARA II",
+              "length_m": null,
+              "qty": 12
+            }
+          ],
+          "path2": [
+            {
+              "note": "Cable Pick",
+              "item": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL",
+              "length_m": null,
+              "qty": 1
+            },
+            {
+              "note": "Array Signal",
+              "item": "Klotz eXtreme, 8 x 4,0 mm² with PA-COM 8p",
+              "length_m": 8,
+              "qty": 2
+            },
+            {
+              "note": "Cable Split",
+              "item": "Klotz L-ACOUSTICS DOFILL",
+              "length_m": null,
+              "qty": 2
+            }
+          ]
+        }
+      },
+      "expected": {
+        "total_static": 445.162,
+        "design_load_point": 467.42,
+        "data_ok": true,
+        "governing_item": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+        "governing_used": 0.4669,
+        "governing_ties": 0,
+        "zone_used": {
+          "top_rigging": 0.3648,
+          "hoist": 0.4669,
+          "hook": 0.1499,
+          "path1": 0.4115,
+          "path2": 0.0078
+        },
+        "zone_item": {
+          "top_rigging": "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003",
+          "hoist": "Lodestar D8 LL 1000 Kg 1 Fall 7.92 x 21.80",
+          "hook": "Grade 80 Masterlink ML/A16 2.5t WLL",
+          "path1": "L-Acoustics M-BAR",
+          "path2": "Roundsling 2t EN1492-2:2000 1.0mtr Circ 0.5mtr EWL"
+        },
+        "point_status": "for_approval",
+        "point_used": null
+      },
+      "spec_override": {
+        "Wire rope sling 10mm 1,280 Kg SWL EN13414-1:2003": {
+          "kg": 0.5
+        }
+      }
+    }
+  ]
+}
