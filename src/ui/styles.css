@@ -35,8 +35,9 @@
   color-scheme: light;
 }
 
+/* Night colours: chosen with the theme button, or by the device when the theme is Auto. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #0e1014;
     --surface: #181b21;
     --surface-2: #20242b;
@@ -64,6 +65,35 @@
     --flag-bg: #4a3000;
     color-scheme: dark;
   }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0e1014;
+  --surface: #181b21;
+  --surface-2: #20242b;
+  --text: #f2f4f7;
+  --muted: #b8bec8;
+  --border: #3d434e;
+  --border-strong: #8a93a1;
+  --accent: #8ab4f8;
+  --accent-text: #0e1014;
+  --focus: #8ab4f8;
+  --danger: #ff8a8a;
+
+  --ok-bg: #12361f;
+  --ok-text: #b5ebc4;
+  --ok-dot: #4cc777;
+  --check-bg: #3b2f00;
+  --check-text: #ffe08a;
+  --check-dot: #f2c230;
+  --over-bg: #4a1515;
+  --over-text: #ffbcbc;
+  --over-dot: #ff6b5e;
+  --warn-bg: #3a2600;
+  --warn-border: #f0a43a;
+  --warn-text: #ffdcaa;
+  --flag-bg: #4a3000;
+  color-scheme: dark;
 }
 
 *,
@@ -1347,4 +1377,8 @@ fieldset.lock[disabled] .row-actions {
 .recent-actions {
   display: flex;
   gap: 0.5rem;
+}
+
+.theme-button {
+  min-width: 7.5rem;
 }
