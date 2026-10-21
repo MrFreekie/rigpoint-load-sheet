@@ -17,9 +17,11 @@ export async function start(page: Page, opts: { fsAccess?: boolean } = {}) {
   page.on('dialog', (d) => void d.accept());
   if (!opts.fsAccess) {
     await page.addInitScript(() => {
-      const w = Window.prototype as unknown as Record<string, unknown>;
-      delete w.showOpenFilePicker;
-      delete w.showSaveFilePicker;
+      // Operations on the global object are own properties of window, not of Window.prototype.
+      for (const o of [window, Window.prototype] as unknown as Record<string, unknown>[]) {
+        delete o.showOpenFilePicker;
+        delete o.showSaveFilePicker;
+      }
     });
   }
   await page.goto('./');
