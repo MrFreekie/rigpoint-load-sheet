@@ -43,6 +43,37 @@ describe('ShowFileSchema', () => {
     ]);
   });
 
+  it('rejects a weight and SWL on a row with no item', () => {
+    const f = fixture();
+    (f.hangs[0]!.zones.path1[0] as { item: unknown }).item = null;
+    expect(problems(f)).toEqual([
+      'Hang 1, Load path 1 – array, row 1, snapshot: A row with no item must not have a weight and SWL',
+    ]);
+    (f.hangs[0]!.zones.path1[0] as { item: unknown }).item = '';
+    expect(problems(f)).toEqual([
+      'Hang 1, Load path 1 – array, row 1, snapshot: A row with no item must not have a weight and SWL',
+    ]);
+  });
+
+  it('rejects numbers too large to be real', () => {
+    const f = fixture();
+    (f.hangs[0]!.zones.path1[0] as { qty: unknown }).qty = 10_000;
+    expect(problems(f)).toEqual(['Hang 1, Load path 1 – array, row 1, quantity: Quantity must be 9,999 or less']);
+
+    const g = fixture();
+    (g.hangs[0]!.point_capacity as { kg: unknown }).kg = 1e200;
+    expect(problems(g)).toEqual(['Hang 1, Point capacity, kg: Point capacity must be 1,000,000 or less']);
+  });
+
+  it('accepts the largest allowed values', () => {
+    const f = fixture();
+    const row = f.hangs[0]!.zones.path1[0] as { qty: unknown; snapshot: { kg: unknown; swl_kg: unknown } };
+    row.qty = 9_999;
+    row.snapshot.kg = 100_000;
+    row.snapshot.swl_kg = 1_000_000;
+    expect(ShowFileSchema.safeParse(f).error?.issues ?? []).toEqual([]);
+  });
+
   it('rejects an unknown status', () => {
     const f = fixture();
     (f.job as { status: unknown }).status = 'final';

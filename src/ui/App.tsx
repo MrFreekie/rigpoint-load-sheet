@@ -97,16 +97,20 @@ export function App() {
   useEffect(() => {
     if (!autosaveReady) return;
     const timer = setTimeout(() => {
+      // Promise.resolve().then: a show that fails validation is reported as a
+      // failed autosave instead of throwing out of the timer.
       const write =
         dirty && !doc.locked
-          ? writeAutosave(store, {
-              writtenAt: Date.now(),
-              fileName: doc.fileName,
-              savedFingerprint: doc.savedFingerprint,
-              locked: doc.locked,
-              show: toShowFile(doc.show, { appVersion: __APP_VERSION__, specVersion: doc.show.spec_version, savedAt: new Date() }),
-              handle,
-            })
+          ? Promise.resolve().then(() =>
+              writeAutosave(store, {
+                writtenAt: Date.now(),
+                fileName: doc.fileName,
+                savedFingerprint: doc.savedFingerprint,
+                locked: doc.locked,
+                show: toShowFile(doc.show, { appVersion: __APP_VERSION__, specVersion: doc.show.spec_version, savedAt: new Date() }),
+                handle,
+              }),
+            )
           : clearAutosave(store);
       write.then(() => setAutosaveFailed(false)).catch(() => setAutosaveFailed(true));
     }, AUTOSAVE_DELAY_MS);

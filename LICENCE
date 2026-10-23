@@ -1,23 +1,24 @@
-MIT Licence
-
+RigPoint Load Sheet
 Copyright (c) 2026 RigPoint contributors
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This work is licensed under the Creative Commons Attribution-NonCommercial 4.0
+International Licence (CC BY-NC 4.0).
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+You are free to share (copy and redistribute in any medium or format) and adapt
+(remix, transform and build upon) this work, under these terms:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+  Attribution    You must give appropriate credit ("RigPoint Load Sheet, RigPoint
+                 contributors"), provide a link to the licence, and indicate if
+                 changes were made.
+  NonCommercial  You may not use the work for commercial purposes.
 
-See DISCLAIMER.md for the scope and limits of the calculation.
+No additional restrictions: you may not apply legal terms or technological
+measures that legally restrict others from doing anything the licence permits.
+
+This summary is not the licence. The full legal code is at:
+https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+To view a copy of the licence, visit https://creativecommons.org/licenses/by-nc/4.0/
+
+The work is provided as-is, without warranty. See DISCLAIMER.md for the scope and
+limits of the calculation.

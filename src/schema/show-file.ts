@@ -3,6 +3,7 @@
 
 import { z } from 'zod';
 import type { Hang, Row, Snapshot } from '../engine/types';
+import { MAX_ITEM_KG, MAX_LENGTH_M, MAX_POINT_KG, MAX_QTY, MAX_SWL_KG } from './limits';
 
 export const SHOW_FORMAT = 'loadsheet/1';
 
@@ -12,24 +13,29 @@ export type JobStatus = (typeof JOB_STATUSES)[number];
 const isoDate = (what: string) =>
   z.iso.date({ error: `${what} must be a date in the form yyyy-mm-dd` }).nullable();
 
-const nonNegative = (what: string) =>
-  z.number({ error: `${what} must be a number` }).finite().nonnegative({ error: `${what} must not be negative` });
+const nonNegative = (what: string, max: number) =>
+  z
+    .number({ error: `${what} must be a number` })
+    .finite()
+    .nonnegative({ error: `${what} must not be negative` })
+    .max(max, { error: `${what} must be ${max.toLocaleString('en-GB')} or less` });
 
 export const SnapshotSchema = z.object({
-  kg: nonNegative('Snapshot weight').nullable(),
+  kg: nonNegative('Snapshot weight', MAX_ITEM_KG).nullable(),
   per: z.enum(['each', 'm'], { error: 'Snapshot "per" must be "each" or "m"' }),
-  swl_kg: nonNegative('Snapshot SWL').nullable(),
+  swl_kg: nonNegative('Snapshot SWL', MAX_SWL_KG).nullable(),
 });
 
 export const RowSchema = z
   .object({
     note: z.string({ error: 'Note must be text' }).nullable(),
     item: z.string({ error: 'Item must be text' }).nullable(),
-    length_m: nonNegative('Length').nullable(),
+    length_m: nonNegative('Length', MAX_LENGTH_M).nullable(),
     qty: z
       .number({ error: 'Quantity must be a number' })
       .int({ error: 'Quantity must be a whole number' })
       .nonnegative({ error: 'Quantity must not be negative' })
+      .max(MAX_QTY, { error: `Quantity must be ${MAX_QTY.toLocaleString('en-GB')} or less` })
       .nullable(),
     snapshot: SnapshotSchema.nullable(),
   })
@@ -39,6 +45,15 @@ export const RowSchema = z
         code: 'custom',
         path: ['snapshot'],
         message: `Item "${row.item}" has no snapshot of its weight and SWL`,
+      });
+    }
+    // A weight and SWL with no item would be left out of the total but still
+    // checked against its SWL. The editor never writes this; a damaged file can.
+    if (!row.item && row.snapshot !== null) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['snapshot'],
+        message: 'A row with no item must not have a weight and SWL',
       });
     }
   });
@@ -55,7 +70,7 @@ export const HangSchema = z.object({
   }),
   top_rigging_included: z.boolean({ error: 'Top rigging included must be true or false' }),
   point_capacity: z.object({
-    kg: nonNegative('Point capacity').nullable(),
+    kg: nonNegative('Point capacity', MAX_POINT_KG).nullable(),
     source: z.string(),
     conditions: z.string(),
     print: z.boolean(),

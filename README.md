@@ -72,4 +72,4 @@ This software is provided as-is, without warranty. It is a calculation aid and d
 
 ## Licence
 
-MIT, see `LICENCE`.
+[Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/): you may share and adapt it with credit, but not for commercial purposes. See `LICENCE`.
