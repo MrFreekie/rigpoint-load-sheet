@@ -2,6 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 import libraryJson from '../../data/spec-library.json';
+import { MAX_ITEM_KG, MAX_SWL_KG } from './limits';
 import { SpecLibrarySchema } from './spec-library';
 
 const item = (over: Record<string, unknown> = {}) => ({
@@ -21,6 +22,13 @@ describe('data/spec-library.json', () => {
 
   it('is valid', () => {
     expect(parsed.error?.issues ?? []).toEqual([]);
+  });
+
+  it('fits within the limits a show file accepts', () => {
+    for (const i of libraryJson.items) {
+      expect(i.kg ?? 0, i.name).toBeLessThanOrEqual(MAX_ITEM_KG);
+      expect(i.swl_kg ?? 0, i.name).toBeLessThanOrEqual(MAX_SWL_KG);
+    }
   });
 
   it('has the expected counts (177 items, 27 TBC, 73 rated)', () => {

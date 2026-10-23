@@ -67,10 +67,14 @@ export function serialiseShow(file: ShowFile): string {
 
 /**
  * The parts of a show that matter for "unsaved changes": everything except the
- * save stamp. Two shows with the same content give the same string.
+ * save stamp. Two shows with the same content give the same string. A show that
+ * is not valid gets a fingerprint no saved show can have, so it counts as unsaved
+ * rather than throwing while the screen is drawn.
  */
 export function contentFingerprint(show: unknown): string {
-  const content: Partial<ShowFile> = { ...ShowFileSchema.parse(show) };
+  const parsed = ShowFileSchema.safeParse(show);
+  if (!parsed.success) return `invalid:${JSON.stringify(show)}`;
+  const content: Partial<ShowFile> = { ...parsed.data };
   delete content.saved_at;
   delete content.app_version;
   delete content.spec_version;

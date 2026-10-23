@@ -1226,6 +1226,12 @@ fieldset.lock[disabled] .row-actions {
   color: var(--warn-text);
 }
 
+.app-error {
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
 .banner-actions {
   display: flex;
   flex-wrap: wrap;
