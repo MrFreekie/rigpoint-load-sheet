@@ -152,7 +152,7 @@ export function NumberField({ label, context, value, onChange, min = 0, max, int
   else if (parsed === null && required) error = 'Enter a value';
   else if (parsed !== null && integer && !Number.isInteger(parsed)) error = 'Enter a whole number';
   else if (parsed !== null && parsed < min) error = `Must be ${min} or more`;
-  else if (parsed !== null && max !== undefined && parsed > max) error = `Must be ${max} or less`;
+  else if (parsed !== null && max !== undefined && parsed > max) error = `Must be ${max.toLocaleString('en-GB')} or less`;
 
   const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
   return (

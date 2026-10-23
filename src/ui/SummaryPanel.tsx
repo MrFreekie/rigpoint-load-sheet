@@ -4,6 +4,7 @@ import { useState, type Dispatch } from 'react';
 import { NO_RATED_ITEM_IN_ZONE, tieSuffix } from '../engine/messages';
 import { ZONE_NAMES, ZONES, type HangResult } from '../engine/types';
 import type { EditorAction, EditorHang } from './editor';
+import { MAX_POINT_KG } from '../schema/limits';
 import { ChoiceField, NumberField, TextField } from './fields';
 import { formatKg, formatSwl } from './format';
 import { TrafficLight } from './TrafficLight';
@@ -108,6 +109,7 @@ export function SummaryPanel({ hang, result: r, contingencyLabel, locked, dispat
             <NumberField
               label="Stated point capacity"
               unit="kg"
+              max={MAX_POINT_KG}
               value={pc.kg}
               hint="Leave blank if the design load is being submitted for approval."
               onChange={(v) => dispatch({ type: 'point', field: 'kg', value: v })}

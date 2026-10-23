@@ -5,6 +5,7 @@ import type { HoistOrientation, RowFlag, RowResult, ZoneKey } from '../engine/ty
 import { ZONE_NAMES } from '../engine/types';
 import { libraryByName } from '../library';
 import type { EditorAction, EditorRow } from './editor';
+import { MAX_LENGTH_M, MAX_QTY } from '../schema/limits';
 import { NumberField, TextField } from './fields';
 import { formatKg, formatSpecKg, formatSwl } from './format';
 import { ItemPicker } from './ItemPicker';
@@ -152,6 +153,7 @@ function RowEditor({ zone, index, count, row, res, contingencyLabel, dispatch }:
           label="Qty"
           context={label}
           integer
+          max={MAX_QTY}
           value={row.qty}
           onChange={(v) => dispatch({ type: 'row/update', zone, index, patch: { qty: v } })}
         />
@@ -160,6 +162,7 @@ function RowEditor({ zone, index, count, row, res, contingencyLabel, dispatch }:
           label="Length"
           context={label}
           unit="m"
+          max={MAX_LENGTH_M}
           value={perMetre ? row.length_m : null}
           disabled={!perMetre}
           placeholder={perMetre ? '' : '–'}

@@ -25,6 +25,14 @@ describe('saved and unsaved', () => {
     expect(isDirty(run(d, { type: 'edit', action: { type: 'job', field: 'venue', value: '' } }))).toBe(false);
   });
 
+  it('a show that fails validation counts as unsaved instead of throwing', () => {
+    const d = openedDoc(file(), null);
+    const bad = structuredClone(d.show);
+    (bad.hangs[0]!.zones.path1[0] as { qty: number | null }).qty = 2 ** 53;
+    expect(() => isDirty({ ...d, show: bad })).not.toThrow();
+    expect(isDirty({ ...d, show: bad })).toBe(true);
+  });
+
   it('saving clears the unsaved state and records the file name and spec version', () => {
     const d = run(openedDoc(file(), null), setVenue, { type: 'saved', fileName: 'b.loadsheet.json', specVersion: '2026-11-04' });
     expect(isDirty(d)).toBe(false);
