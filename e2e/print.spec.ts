@@ -3,7 +3,7 @@
 
 import { writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { ballroom, openFile, start } from './helpers';
+import { ballroom, librarySpecVersion, openFile, start } from './helpers';
 
 test.skip(({ browserName }) => browserName !== 'chromium', 'PDF printing is Chromium-only in Playwright');
 
@@ -68,9 +68,13 @@ test('the Ballroom Load Sheet prints on exactly one A4 page', async ({ page }) =
   await expect(s).toContainText('Design load submitted for approval by the venue / structural engineer.');
   await expect(s).toContainText('Taken from the Spec library in this app'.replace('Taken', 'taken'));
   await expect(s.locator('.ls-watermark')).toHaveText('DRAFT');
-  await expect(s.locator('.ls-footer')).toHaveText(
-    /^RigPoint Load Sheet app \d+\.\d+\.\d+ · Spec [\d.-]+ · The Ballroom - Main Hang Left\.loadsheet\.json \(not saved\) · Printed \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/,
-  );
+  // The example was made with one library version; when the app's library is newer, the
+  // footer names both, so the printout says which data produced it.
+  const showSpec = String(ballroom.spec_version);
+  const spec = showSpec === librarySpecVersion ? showSpec : `${showSpec} (app library ${librarySpecVersion})`;
+  const footer = s.locator('.ls-footer');
+  await expect(footer).toContainText(`· Spec ${spec} · The Ballroom - Main Hang Left.loadsheet.json (not saved) · Printed `);
+  await expect(footer).toHaveText(/^RigPoint Load Sheet app \d+\.\d+\.\d+ · Spec .+ · Printed \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/);
   // Sheet Date is left blank for handwriting.
   await expect(s.locator('.ls-write-in')).toHaveText('');
 });

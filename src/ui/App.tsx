@@ -163,6 +163,7 @@ export function App() {
     fileName: string | null,
     migratedFrom: string | null,
     fileHandle: FileSystemFileHandle | null = null,
+    compareLibrary = true,
   ) => {
     dispatch({ type: 'open', show: file, fileName });
     setHandle(fileHandle);
@@ -170,8 +171,8 @@ export function App() {
     // Keep an autosave the user has not yet answered the restore question about.
     if (!latest.current.restorePending) clearAutosave(store).catch(() => setAutosaveFailed(true));
     setView('editor');
-    const c = compareWithLibrary(file, libraryByName, library.spec_version);
-    setComparison(c.anyDifferences ? c : null);
+    const c = compareLibrary ? compareWithLibrary(file, libraryByName, library.spec_version) : null;
+    setComparison(c?.anyDifferences ? c : null);
     const parts = [
       fileName ? `Opened ${fileName}.` : null,
       migratedFrom ? `It was upgraded from format ${migratedFrom}; save it to keep the upgrade.` : null,
@@ -269,7 +270,9 @@ export function App() {
 
   const onLoadExample = () => {
     if (!confirmDiscard('Load the Ballroom example')) return;
-    afterOpen(exampleShow(), null, null, null);
+    // The example is a fixed sample saved with the workbook's library, so it opens exactly as
+    // saved, without listing later library changes.
+    afterOpen(exampleShow(), null, null, null, false);
   };
 
   /** The file text to write now, its default name, and the library version it records. */

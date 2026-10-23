@@ -36,7 +36,7 @@ jobs:
         run: npm run lint
 
       - name: Python reference engine passes the scenarios
-        run: python3 reference/engine_reference.py fixtures/scenarios.json data/spec-library.json
+        run: python3 reference/engine_reference.py fixtures/scenarios.json fixtures/spec-library.workbook.json
 
       - name: Unit tests (engine, schemas, differential against the reference)
         run: npm test

@@ -2,11 +2,19 @@
 // with snapshots the same way the app will when an item is chosen.
 
 import libraryJson from '../../data/spec-library.json';
+import workbookLibraryJson from '../../fixtures/spec-library.workbook.json';
 import scenariosJson from '../../fixtures/scenarios.json';
 import { ZONES, type Hang, type Row, type ZoneKey } from '../engine/types';
 import { SpecLibrarySchema, snapshotOf, type SpecItem, type SpecLibrary } from '../schema/spec-library';
 
 export const library: SpecLibrary = SpecLibrarySchema.parse(libraryJson);
+
+/**
+ * The Spec library as it was when the workbook produced the expected results in
+ * fixtures/scenarios.json. The scenarios are checked against this frozen copy, so later
+ * library changes (which go through review) never alter the workbook comparison.
+ */
+export const workbookLibrary: SpecLibrary = SpecLibrarySchema.parse(workbookLibraryJson);
 
 export interface ScenarioRow {
   note: string | null;
@@ -50,8 +58,8 @@ export interface Scenario {
 export const scenarios = (scenariosJson as { scenarios: Scenario[] }).scenarios;
 
 /** Library lookup by name, with any per-scenario overrides applied. */
-export function specLookup(overrides: Scenario['spec_override'] = {}): Map<string, SpecItem> {
-  const map = new Map(library.items.map((i) => [i.name, { ...i }]));
+export function specLookup(overrides: Scenario['spec_override'] = {}, from: SpecLibrary = library): Map<string, SpecItem> {
+  const map = new Map(from.items.map((i) => [i.name, { ...i }]));
   for (const [name, fields] of Object.entries(overrides)) {
     const item = map.get(name);
     if (!item) throw new Error(`spec_override names an item not in the library: ${name}`);
@@ -74,7 +82,7 @@ export function buildHang(h: ScenarioHang, spec: Map<string, SpecItem>, id = 'h1
 }
 
 export function scenarioHang(s: Scenario): Hang {
-  return buildHang(s.hang, specLookup(s.spec_override));
+  return buildHang(s.hang, specLookup(s.spec_override, workbookLibrary));
 }
 
 /** Round as Python's round() does for the values compared here. */

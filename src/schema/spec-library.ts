@@ -5,6 +5,27 @@ import type { Snapshot } from '../engine/types';
 
 export const SPEC_FORMAT = 'loadsheet-spec/1';
 
+/**
+ * spec_version is the date of the last library change, yyyy-mm-dd. A second or later change
+ * on the same day adds a suffix: 2026-10-21.2, 2026-10-21.3, … (no suffix counts as .1).
+ * scripts/check-spec-version.mjs repeats this rule for CI; keep the two in step.
+ */
+const SPEC_VERSION_PATTERN = /^(\d{4}-\d{2}-\d{2})(?:\.([2-9]|[1-9]\d+))?$/;
+
+export function parseSpecVersion(v: string): { date: string; change: number } | null {
+  const m = SPEC_VERSION_PATTERN.exec(v);
+  if (!m || !z.iso.date().safeParse(m[1]).success) return null;
+  return { date: m[1] as string, change: m[2] ? Number(m[2]) : 1 };
+}
+
+/** Negative if a is older than b, 0 if equal, positive if newer. Null if either is not a valid version. */
+export function compareSpecVersions(a: string, b: string): number | null {
+  const pa = parseSpecVersion(a);
+  const pb = parseSpecVersion(b);
+  if (!pa || !pb) return null;
+  return pa.date === pb.date ? pa.change - pb.change : pa.date < pb.date ? -1 : 1;
+}
+
 const nonNegative = (what: string) =>
   z.number({ error: `${what} must be a number` }).finite().nonnegative({ error: `${what} must not be negative` });
 
@@ -21,7 +42,9 @@ export const SpecItemSchema = z.object({
 export const SpecLibrarySchema = z
   .object({
     format: z.literal(SPEC_FORMAT),
-    spec_version: z.iso.date({ error: 'spec_version must be an ISO date (yyyy-mm-dd)' }),
+    spec_version: z.string().refine((v) => parseSpecVersion(v) !== null, {
+      error: 'spec_version must be a date (yyyy-mm-dd), with .2, .3 … for a further change on the same day',
+    }),
     units: z.record(z.string(), z.string()).optional(),
     items: z.array(SpecItemSchema),
   })

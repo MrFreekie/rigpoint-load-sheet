@@ -2,9 +2,9 @@
 
 import type { SpecItem } from '../schema/spec-library';
 
-/** Lower case, with compatibility characters folded (e.g. "mm²" matches "mm2"). */
+/** Lower case, with compatibility characters folded ("mm²" matches "mm2", "4×12" matches "4x12"). */
 export function normalise(s: string): string {
-  return s.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase();
+  return s.normalize('NFKD').replace(/\p{M}/gu, '').replace(/×/g, 'x').toLowerCase();
 }
 
 /**

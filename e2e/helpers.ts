@@ -8,6 +8,11 @@ export const ballroom = JSON.parse(
   hangs: { zones: Record<string, { item: string | null; snapshot: Record<string, unknown> | null }[]> }[];
 };
 
+/** The bundled library's version, so tests do not need editing when the library changes. */
+export const librarySpecVersion = (
+  JSON.parse(readFileSync(new URL('../data/spec-library.json', import.meta.url), 'utf8')) as { spec_version: string }
+).spec_version;
+
 /**
  * Open the app with a clean slate. Confirmations and leave-page prompts are accepted.
  * By default the File System Access API is hidden, so Chromium uses layer 1 (file input and

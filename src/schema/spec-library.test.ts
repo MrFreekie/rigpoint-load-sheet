@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import libraryJson from '../../data/spec-library.json';
 import { MAX_ITEM_KG, MAX_SWL_KG } from './limits';
-import { SpecLibrarySchema } from './spec-library';
+import { compareSpecVersions, parseSpecVersion, SpecLibrarySchema } from './spec-library';
 
 const item = (over: Record<string, unknown> = {}) => ({
   name: 'Test item',
@@ -31,12 +31,12 @@ describe('data/spec-library.json', () => {
     }
   });
 
-  it('has the expected counts (177 items, 27 TBC, 73 rated)', () => {
+  it('has the expected counts (189 items, 27 TBC, 89 rated)', () => {
     // Update these when the library changes; they guard against accidental edits.
     const items = parsed.data!.items;
-    expect(items).toHaveLength(177);
+    expect(items).toHaveLength(189);
     expect(items.filter((i) => i.kg === null)).toHaveLength(27);
-    expect(items.filter((i) => (i.swl_kg ?? 0) > 0)).toHaveLength(73);
+    expect(items.filter((i) => (i.swl_kg ?? 0) > 0)).toHaveLength(89);
   });
 });
 
@@ -63,7 +63,27 @@ describe('SpecLibrarySchema', () => {
     expect(SpecLibrarySchema.safeParse(lib([item(over)])).success).toBe(false);
   });
 
-  it('rejects a bad spec_version', () => {
-    expect(SpecLibrarySchema.safeParse({ ...lib([]), spec_version: 'v6' }).success).toBe(false);
+  it.each(['v6', '2026-13-01', '2026-10-21.1', '2026-10-21.0', '2026-10-21.', '2026-10-21.02', '21/10/2026'])(
+    'rejects spec_version %j',
+    (v) => expect(SpecLibrarySchema.safeParse({ ...lib([]), spec_version: v }).success).toBe(false),
+  );
+
+  it.each(['2026-10-21', '2026-10-21.2', '2026-10-21.10'])('accepts spec_version %j', (v) =>
+    expect(SpecLibrarySchema.safeParse({ ...lib([]), spec_version: v }).success).toBe(true),
+  );
+});
+
+describe('spec versions', () => {
+  it('parses the date and same-day change number', () => {
+    expect(parseSpecVersion('2026-10-21')).toEqual({ date: '2026-10-21', change: 1 });
+    expect(parseSpecVersion('2026-10-21.2')).toEqual({ date: '2026-10-21', change: 2 });
   });
+
+  it.each([
+    ['2026-10-21', '2026-10-21', 0],
+    ['2026-10-21.2', '2026-10-21', 1],
+    ['2026-10-21.10', '2026-10-21.9', 1],
+    ['2026-10-22', '2026-10-21.5', 1],
+    ['2026-10-21.3', '2026-11-01', -1],
+  ])('%s compared with %s', (a, b, sign) => expect(Math.sign(compareSpecVersions(a, b)!)).toBe(sign));
 });

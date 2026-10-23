@@ -11,7 +11,8 @@ const MAX_SHOWN = 60;
 
 function itemMeta(i: SpecItem): string {
   const kg = i.kg === null ? 'weight TBC' : `${formatSpecKg(i.kg, i.per)}${i.per === 'each' ? ' each' : ''}`;
-  return i.swl_kg ? `${kg} · SWL ${formatSwl(i.swl_kg)}` : kg;
+  const rated = i.swl_kg ? `${kg} · SWL ${formatSwl(i.swl_kg)}` : kg;
+  return i.weight_note ? `${rated} · ${i.weight_note}` : rated;
 }
 
 interface Props {
