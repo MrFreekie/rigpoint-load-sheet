@@ -21,6 +21,11 @@ export interface ScenarioRow {
   item: string | null;
   length_m: number | null;
   qty: number | null;
+  /**
+   * Test only: give a row with no item the snapshot of this library item, as a damaged
+   * file could (the schema rejects it). The Python reference never reads this field.
+   */
+  snapshot_without_item?: string;
 }
 
 export interface ScenarioHang {
@@ -70,8 +75,10 @@ export function specLookup(overrides: Scenario['spec_override'] = {}, from: Spec
 
 /** Build an engine row, snapshotting from the library. Unknown items get no snapshot. */
 export function buildRow(row: ScenarioRow, spec: Map<string, SpecItem>): Row {
-  const item = row.item ? spec.get(row.item) : undefined;
-  return { ...row, snapshot: item ? snapshotOf(item) : null };
+  const { snapshot_without_item: stray, ...fields } = row;
+  const name = fields.item ? fields.item : stray;
+  const item = name ? spec.get(name) : undefined;
+  return { ...fields, snapshot: item ? snapshotOf(item) : null };
 }
 
 export function buildHang(h: ScenarioHang, spec: Map<string, SpecItem>, id = 'h1'): Hang {
