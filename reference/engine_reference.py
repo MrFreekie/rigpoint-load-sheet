@@ -4,7 +4,9 @@ This is the behaviour of The_Ballroom_Array_Weights_v6.xlsx expressed as plain
 Python. It exists so the TypeScript engine has an unambiguous spec to match.
 It is NOT part of the app. Run it with:
 
-    python3 engine_reference.py ../fixtures/scenarios.json ../data/spec-library.json
+    python3 reference/engine_reference.py fixtures/scenarios.json fixtures/spec-library.workbook.json
+
+(from the repository root; use `python` on Windows).
 
 It prints the results for every scenario and checks them against the
 "expected" block in scenarios.json.
@@ -36,6 +38,17 @@ def line(item_row, spec):
     return s["kg"], line_kg, line_kg * (item_row.get("qty") or 0), swl, None
 
 
+def light(used):
+    """Traffic light for a utilisation: Calc!K10:K40 conditional formatting."""
+    if used > 1:
+        return "over"
+    if used >= 0.85:
+        return "check"
+    if used > 0:
+        return "ok"
+    return None
+
+
 def calculate(hang, contingency, spec):
     rows = {z: [] for z in ZONES}
     for z in ZONES:
@@ -64,7 +77,7 @@ def calculate(hang, contingency, spec):
             design = carried * (1 + contingency)
             checks.append(dict(zone=z, item=r["item"], swl=r["swl"],
                                carried_static=carried, carried_design=design,
-                               used=design / r["swl"]))
+                               used=design / r["swl"], light=light(design / r["swl"])))
 
     total = sum(sub.values())
     design_point = total * (1 + contingency)
@@ -100,8 +113,11 @@ def calculate(hang, contingency, spec):
 
 
 def main(scen_path, spec_path):
-    spec = {i["name"]: i for i in json.load(open(spec_path))["items"]}
-    scen = json.load(open(scen_path))
+    # Item names contain non-ASCII characters (e.g. "mm²"); never rely on the locale encoding.
+    with open(spec_path, encoding="utf-8") as f:
+        spec = {i["name"]: i for i in json.load(f)["items"]}
+    with open(scen_path, encoding="utf-8") as f:
+        scen = json.load(f)
     failures = 0
     for s in scen["scenarios"]:
         sp = {k: dict(v) for k, v in spec.items()}

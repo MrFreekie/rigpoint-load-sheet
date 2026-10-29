@@ -177,6 +177,23 @@ describe('row weights and flags', () => {
     expect(r.data_ok).toBe(false);
   });
 
+  it('a row with no item is unrated and weightless even if it has a snapshot', () => {
+    // Workbook column H is blank when the item is blank, and the reference agrees. The schema
+    // rejects such files; this keeps the engine safe if one ever reaches it.
+    for (const item of [null, '']) {
+      const r = calculate(
+        hang({ hook: [row(item, EACH(5, 100), 3, null, 'Stray')], path1: [row('Box', EACH(200))] }),
+        0.05,
+      );
+      expect(r.rows.hook[0]).toMatchObject({ item, total_kg: null, flag: null, rated: false, swl_kg: null, used: null, light: null });
+      expect(r.checks).toEqual([]);
+      expect(r.zone_governing.hook).toBeNull();
+      expect(r.governing_label).toBe(NO_RATED_ITEMS);
+      expect(r.total_static).toBe(200);
+      expect(r.data_ok).toBe(true);
+    }
+  });
+
   it('SWL of 0 or null is unrated', () => {
     const r = calculate(hang({ path1: [row('A', EACH(1, 0)), row('B', EACH(1, null)), row('C', EACH(1))] }), 0.05);
     expect(r.rows.path1.map((x) => x.rated)).toEqual([false, false, false]);
@@ -441,5 +458,42 @@ describe('soft warnings', () => {
   it('none when the flag matches the zone', () => {
     expect(codes(hang({ top_rigging: [row('Steel', EACH(1, 1000))] }, { top_rigging_included: true }))).toEqual([]);
     expect(codes(hang({}, { top_rigging_included: false }))).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Known disagreements between the workbook, the Python reference and this engine.
+// Each test pins the engine's current behaviour so that any change is deliberate.
+// AWAITING THE OWNER'S DECISION (.claude/review-backlog.md, "Needs the owner"): do not
+// change these expectations, or the engine, until the owner has chosen.
+
+describe('awaiting the owner: known disagreements', () => {
+  it('tie tolerance: utilisations 1e-10 apart are a tie (workbook: exact; reference: 1e-12)', () => {
+    // Awaiting the owner's decision on the tie rule.
+    const r = calculate(
+      hang({ hook: [row('Link', EACH(0, 1000))], path1: [row('Bar', EACH(0, 1000 * (1 - 1e-10))), row('Box', EACH(500))] }),
+      0,
+    );
+    expect(r.checks[1]!.used).toBeGreaterThan(r.checks[0]!.used);
+    expect(r.governing).toMatchObject({ item: 'Link', ties: 1 });
+    expect(r.governing_label).toBe('Link (+1 other at the same utilisation)');
+  });
+
+  it('SWL 0: the row is unrated and not checked (workbook agrees; reference divides by zero)', () => {
+    // Awaiting the owner's decision on SWL 0.
+    const r = calculate(hang({ hook: [row('Link', EACH(1, 0))], path1: [row('Box', EACH(100))] }), 0.05);
+    expect(r.rows.hook[0]).toMatchObject({ rated: false, swl_kg: 0, used: null, light: null });
+    expect(r.checks).toEqual([]);
+    expect(r.governing).toBeNull();
+  });
+
+  it('whitespace-only point source counts as no source (workbook and reference: recorded)', () => {
+    // Awaiting the owner's decision on whitespace-only sources.
+    const r = calculate(
+      hang({ path1: [row('Box', EACH(100), 4)] }, { point_capacity: { kg: 1000, source: '   ', conditions: '', print: true } }),
+      0.05,
+    );
+    expect(r.point_status).toBe('no_source');
+    expect(r.point_message).toBe(POINT_MESSAGES.no_source);
   });
 });

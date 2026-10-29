@@ -99,7 +99,9 @@ export function calculate(hang: Hang, contingency: number): HangResult {
   const rows = zoneRecord<RowResult[]>((zone) =>
     (hang.zones[zone] ?? []).map((row, index) => {
       const ln = line(row);
-      const swl = row.snapshot?.swl_kg ?? null;
+      // A row with no item is unrated and weightless, whatever its snapshot says
+      // (workbook column H: IF($B="","",…); reference line() returns no SWL).
+      const swl = row.item ? (row.snapshot?.swl_kg ?? null) : null;
       return {
         zone,
         index,
@@ -178,7 +180,7 @@ export function calculate(hang: Hang, contingency: number): HangResult {
   const zoneGoverning = zoneRecord((z) => governing(checks.filter((c) => c.zone === z)));
   const overall = governing(checks);
   const governingLabel = overall
-    ? `${overall.item ?? overall.note ?? ''}${tieSuffix(overall.ties)}`
+    ? `${overall.item || overall.note || ''}${tieSuffix(overall.ties)}`
     : NO_RATED_ITEMS;
 
   // Connection point. Not part of the equipment governing component.

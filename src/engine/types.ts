@@ -80,7 +80,7 @@ export interface RowResult {
   /** line_kg × qty. Null when flagged or no item; counts as 0 in totals. */
   total_kg: number | null;
   flag: RowFlag | null;
-  /** True when the snapshot SWL is a number greater than 0. */
+  /** True when the row has an item and its snapshot SWL is a number greater than 0. */
   rated: boolean;
   swl_kg: number | null;
   /** Present only for rated rows. */
