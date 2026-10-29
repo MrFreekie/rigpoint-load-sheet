@@ -230,6 +230,10 @@ While you work, the app keeps a copy of your unsaved changes in the browser. If 
 
 Choose **Restore** to get them back, or **Discard** to throw them away.
 
+If more than one show was left unsaved, the app offers them one at a time, newest first. You can carry on working while an offer waits: your current show is still autosaved, and the offer stays until you answer it.
+
+If you saved by downloading the file (Safari, Firefox and phones), the app keeps its copy until you start another show, in case the download did not arrive. Next time it may offer that copy too: restore it only if the file is missing.
+
 Autosave is a safety net for that one browser on that one device. It is not a backup, and it disappears if you clear your browsing data. Always save to a file. In a private or incognito window, autosave may not work at all, and the app tells you so.
 
 ### When the equipment list has changed
@@ -306,7 +310,7 @@ You do not need to do anything to get updates.
 
 1. When a new version is ready, a banner appears at the top: **Update available – reload**.
 2. Carry on with what you are doing. The app never changes in the middle of your work.
-3. Press **Reload** when it suits you. If you have unsaved changes, it asks first. They are kept by autosave and offered back straight after the reload: press **Restore**.
+3. Press **Reload** when it suits you. If you have unsaved changes, it asks first. If autosave is working, they are offered back straight after the reload (apart from the last few seconds of typing): press **Restore**. If autosave is not working, the app warns you that they will be lost, so save first.
 
 If you ignore the banner, the new version is used the next time you fully close and reopen the app.
 

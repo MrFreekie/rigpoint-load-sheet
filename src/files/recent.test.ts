@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { memoryStore } from './autosave';
 import { firstLaunchedFile } from './launch';
-import { addRecent, listRecent, MAX_RECENT, removeRecent, type SameFile } from './recent';
+import { addRecent, listRecent, MAX_RECENT, removeRecent, sameHandle, type SameFile } from './recent';
 
 // Real file handles compare with isSameEntry; plain objects stand in for them here.
 type FakeHandle = { name: string };
@@ -49,6 +49,35 @@ describe('recent files', () => {
       throw new DOMException('gone', 'NotFoundError');
     };
     expect((await addRecent(store, h('b'), failing, 2)).map((r) => r.name)).toEqual(['b', 'a']);
+  });
+});
+
+describe('recent files: failures and concurrency', () => {
+  it('a comparison that throws at once (not a rejection) counts as a different file', async () => {
+    const store = memoryStore();
+    await addRecent(store, h('a'), same, 1);
+    const throwing: SameFile<FakeHandle> = () => {
+      throw new TypeError('isSameEntry is not a function');
+    };
+    expect((await addRecent(store, h('b'), throwing, 2)).map((r) => r.name)).toEqual(['b', 'a']);
+    expect((await removeRecent(store, h('a'), throwing)).map((r) => r.name)).toEqual(['b', 'a']);
+  });
+
+  it('sameHandle turns a synchronous throw into a rejection', async () => {
+    const broken = {} as FileSystemFileHandle; // no isSameEntry
+    await expect(sameHandle(broken, broken)).rejects.toThrow();
+  });
+
+  it('adds made at the same time are all kept', async () => {
+    const store = memoryStore();
+    const slow = new Proxy(store, {
+      get(target, prop, receiver) {
+        if (prop === 'get') return async (k: string) => (await new Promise((r) => setTimeout(r, 5)), target.get(k));
+        return Reflect.get(target, prop, receiver);
+      },
+    });
+    await Promise.all([addRecent(slow, h('a'), same, 1), addRecent(slow, h('b'), same, 2), addRecent(slow, h('c'), same, 3)]);
+    expect((await listRecent<FakeHandle>(store)).map((r) => r.name).sort()).toEqual(['a', 'b', 'c']);
   });
 });
 

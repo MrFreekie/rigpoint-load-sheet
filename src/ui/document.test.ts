@@ -34,10 +34,21 @@ describe('saved and unsaved', () => {
   });
 
   it('saving clears the unsaved state and records the file name and spec version', () => {
-    const d = run(openedDoc(file(), null), setVenue, { type: 'saved', fileName: 'b.loadsheet.json', specVersion: '2026-11-04' });
+    const edited = run(openedDoc(file(), null), setVenue);
+    const d = run(edited, { type: 'saved', fileName: 'b.loadsheet.json', specVersion: '2026-11-04', fingerprint: contentFingerprint(edited.show) });
     expect(isDirty(d)).toBe(false);
     expect(d.fileName).toBe('b.loadsheet.json');
     expect(d.show.spec_version).toBe('2026-11-04');
+  });
+
+  it('an edit made while the save was in progress stays unsaved', () => {
+    const atClick = run(openedDoc(file(), null), setVenue);
+    const written = contentFingerprint(atClick.show);
+    const during = run(atClick, { type: 'edit', action: { type: 'job', field: 'name', value: 'Changed during the save' } });
+    const after = run(during, { type: 'saved', fileName: 'b.loadsheet.json', specVersion: '2026-11-04', fingerprint: written });
+    expect(isDirty(after)).toBe(true);
+    expect(after.show.job.name).toBe('Changed during the save');
+    expect(after.fileName).toBe('b.loadsheet.json');
   });
 });
 
@@ -138,6 +149,15 @@ describe('autosave storage', () => {
     expect(await readAutosave(store)).toBeNull();
     await writeAutosave(store, record(newDoc('x')));
     await clearAutosave(store);
+    expect(await readAutosave(store)).toBeNull();
+  });
+
+  it('keeps the file modified time and rejects one that is not a number', async () => {
+    const store = memoryStore();
+    const d = run(openedDoc(file(), 'a.loadsheet.json'), setVenue);
+    await writeAutosave(store, { ...record(d), diskStamp: 1_700_000_000_000 });
+    expect((await readAutosave(store))?.diskStamp).toBe(1_700_000_000_000);
+    await writeAutosave(store, { ...record(d), diskStamp: 'soon' as unknown as number });
     expect(await readAutosave(store)).toBeNull();
   });
 

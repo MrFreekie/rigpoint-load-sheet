@@ -27,7 +27,8 @@ export type DocAction =
   | { type: 'new'; specVersion: string }
   | { type: 'open'; show: ShowFile; fileName: string | null }
   | { type: 'restore'; show: ShowFile; fileName: string | null; savedFingerprint: string; locked: boolean }
-  | { type: 'saved'; fileName: string; specVersion: string }
+  /** `fingerprint` is that of the content actually written, not of whatever is on screen when the save finishes. */
+  | { type: 'saved'; fileName: string; specVersion: string; fingerprint: string }
   | { type: 'new-revision' }
   | { type: 'library-update'; items: ReadonlySet<string>; library: ReadonlyMap<string, SpecItem> };
 
@@ -93,7 +94,9 @@ export function docReducer(doc: Doc, action: DocAction): Doc {
         ...doc,
         show: { ...doc.show, spec_version: action.specVersion },
         fileName: action.fileName,
-        savedFingerprint: contentFingerprint(doc.show),
+        // What was written, not the current content: edits made while the save was in
+        // progress stay unsaved.
+        savedFingerprint: action.fingerprint,
       };
     case 'new-revision': {
       // An editable copy; the original file is untouched and the copy is saved under a new name.

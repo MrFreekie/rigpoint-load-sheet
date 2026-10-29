@@ -1,6 +1,12 @@
 // Labelled form fields. Every input has a visible label (WCAG 2.1 AA).
 
-import { useId, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useId, useState, type ReactNode } from 'react';
+
+/**
+ * The number boxes that currently show an error, by id. The App provides a set and reads its size
+ * before Print and Save, to warn that the sheet and the file use the last valid values.
+ */
+export const FieldErrorsContext = createContext<Set<string> | null>(null);
 
 interface FieldShell {
   label: string;
@@ -153,6 +159,16 @@ export function NumberField({ label, context, value, onChange, min = 0, max, int
   else if (parsed !== null && integer && !Number.isInteger(parsed)) error = 'Enter a whole number';
   else if (parsed !== null && parsed < min) error = `Must be ${min} or more`;
   else if (parsed !== null && max !== undefined && parsed > max) error = `Must be ${max.toLocaleString('en-GB')} or less`;
+
+  const errors = useContext(FieldErrorsContext);
+  const hasError = error !== null;
+  useEffect(() => {
+    if (!errors || !hasError) return;
+    errors.add(id);
+    return () => {
+      errors.delete(id);
+    };
+  }, [errors, hasError, id]);
 
   const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
   return (

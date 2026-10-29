@@ -34,6 +34,13 @@ export function formatDate(iso: string | null): string {
   return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
 }
 
+/** A moment (ms since epoch) as local date and time, e.g. "29/10/2026 00:30". */
+export function formatDateTime(ms: number): string {
+  const d = new Date(ms);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export const LIGHT_WORDS: Record<Light, string> = { ok: 'OK', check: 'CHECK', over: 'OVER' };
 
 /** Contingency fraction as a percentage number for editing, without float noise (0.07 → 7). */

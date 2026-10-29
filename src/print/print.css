@@ -32,6 +32,27 @@
     position: static;
     visibility: visible;
   }
+
+  /* Fixed: the browser repeats a fixed element on every printed page, so the DRAFT mark is on
+     each page however many the sheet runs to. */
+  .ls-page .ls-watermark {
+    position: fixed;
+  }
+
+  /* When the sheet runs onto more than one page, break between rows and blocks, not through them. */
+  .ls-page tr,
+  .ls-point,
+  .ls-capacity,
+  .ls-statements,
+  .ls-small-print,
+  .ls-signatures,
+  .ls-footer {
+    break-inside: avoid;
+  }
+
+  .ls-page h2 {
+    break-after: avoid;
+  }
 }
 
 .ls-page {
@@ -134,6 +155,8 @@
 .ls-header td {
   width: 33%;
   border-bottom: 0.2mm solid #999;
+  /* A long Job, Venue or point name wraps inside its cell instead of running over the next one. */
+  overflow-wrap: anywhere;
 }
 
 .ls-header td.ls-write-in {
@@ -244,6 +267,14 @@
   margin-top: 1mm !important;
 }
 
+/* Free text that can hold a long unbroken word (source, conditions, file name in the footer). */
+.ls-line,
+.ls-statements p,
+.ls-footer,
+.ls-figures th {
+  overflow-wrap: anywhere;
+}
+
 .ls-capacity table {
   table-layout: fixed;
 }
@@ -259,6 +290,11 @@
 .ls-capacity tbody td,
 .ls-capacity tbody th {
   border-bottom: 0.15mm solid #bbb;
+  overflow-wrap: anywhere;
+}
+
+.ls-capacity td.num {
+  overflow-wrap: normal;
 }
 
 .ls-governing th {

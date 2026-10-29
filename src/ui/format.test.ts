@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { library } from '../library';
-import { contingencyToPercent, formatDate, formatKg, formatPct, formatSpecKg, formatSwl, showFileName } from './format';
+import { contingencyToPercent, formatDate, formatDateTime, formatKg, formatPct, formatSpecKg, formatSwl, showFileName } from './format';
 import { normalise, searchItems } from './item-search';
 
 describe('formatting', () => {
+  it('date and time are both local, so 00:30 on the 29th is not shown as the 28th', () => {
+    expect(formatDateTime(new Date(2026, 9, 29, 0, 30).getTime())).toBe('29/10/2026 00:30');
+    expect(formatDateTime(new Date(2026, 0, 5, 23, 59).getTime())).toBe('05/01/2026 23:59');
+  });
+
   it('weights: 2 dp, en-GB grouping, kg', () => {
     expect(formatKg(1234.555)).toBe('1,234.56 kg');
     expect(formatKg(444.662)).toBe('444.66 kg');

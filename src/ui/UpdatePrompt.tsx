@@ -3,10 +3,12 @@
 
 import { useEffect } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
+import { reloadWarning } from './reload-warning';
 
 const UPDATE_CHECK_MS = 60 * 60 * 1000;
 
-export function UpdatePrompt({ dirty }: { dirty: boolean }) {
+/** `autosaveActive`: autosave is working and not paused, so it is keeping the unsaved changes. */
+export function UpdatePrompt({ dirty, autosaveActive }: { dirty: boolean; autosaveActive: boolean }) {
   const {
     needRefresh: [needRefresh],
     offlineReady: [offlineReady, setOfflineReady],
@@ -26,14 +28,7 @@ export function UpdatePrompt({ dirty }: { dirty: boolean }) {
   }, [offlineReady, setOfflineReady]);
 
   const reload = () => {
-    if (
-      dirty &&
-      !window.confirm(
-        'Reload to update? Your unsaved changes are kept by autosave in this browser and will be offered back after the reload.',
-      )
-    ) {
-      return;
-    }
+    if (dirty && !window.confirm(reloadWarning(autosaveActive))) return;
     void updateServiceWorker(true);
   };
 
