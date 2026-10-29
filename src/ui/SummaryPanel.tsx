@@ -6,7 +6,7 @@ import { ZONE_NAMES, ZONES, type HangResult } from '../engine/types';
 import type { EditorAction, EditorHang } from './editor';
 import { MAX_POINT_KG } from '../schema/limits';
 import { ChoiceField, NumberField, TextField } from './fields';
-import { formatKg, formatSwl } from './format';
+import { formatKg, formatSwl, LIGHT_WORDS } from './format';
 import { TrafficLight } from './TrafficLight';
 
 interface Props {
@@ -23,6 +23,9 @@ export function SummaryPanel({ hang, result: r, contingencyLabel, locked, dispat
   const [open, setOpen] = useState(false);
   const pc = hang.point_capacity;
   const pointWarn = r.point_status === 'no_source' || r.point_status === 'exceeded';
+  // Spoken when the governing component or its light changes, not on every keystroke
+  // that moves the percentage.
+  const announcement = r.governing?.light ? `${r.governing_label}: ${LIGHT_WORDS[r.governing.light]}` : r.governing_label;
 
   return (
     <aside className={`card summary${open ? ' open' : ''}`} aria-labelledby="summary-heading" id="summary">
@@ -39,7 +42,11 @@ export function SummaryPanel({ hang, result: r, contingencyLabel, locked, dispat
         </button>
       </div>
 
-      <div className="governing" aria-live="polite">
+      <p className="visually-hidden" role="status" aria-live="polite" aria-atomic="true">
+        {announcement}
+      </p>
+
+      <div className="governing">
         <p className="governing-label">Governing component</p>
         <p className="governing-item">{r.governing_label}</p>
         {r.governing ? (

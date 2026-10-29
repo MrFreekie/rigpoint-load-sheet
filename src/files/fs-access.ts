@@ -54,7 +54,11 @@ export async function writeToHandle(handle: FileSystemFileHandle, text: string):
   const writable = await handle.createWritable();
   try {
     await writable.write(text);
-  } finally {
-    await writable.close();
+  } catch (e) {
+    // Throw the partial write away rather than closing (which would commit it over the
+    // file), and report the error that caused it, not any error from the clean-up.
+    await writable.abort().catch(() => undefined);
+    throw e;
   }
+  await writable.close();
 }

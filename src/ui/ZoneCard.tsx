@@ -1,6 +1,6 @@
 // One card per zone: its rows, in load-path order, with add, delete and reorder.
 
-import type { Dispatch } from 'react';
+import { useEffect, useRef, type Dispatch } from 'react';
 import type { HoistOrientation, RowFlag, RowResult, ZoneKey } from '../engine/types';
 import { ZONE_NAMES } from '../engine/types';
 import { libraryByName } from '../library';
@@ -57,8 +57,27 @@ interface ZoneCardProps {
 
 export function ZoneCard({ zone, rows, results, subtotal, contingencyLabel, orientation, dispatch }: ZoneCardProps) {
   const headingId = `zone-${zone}`;
+  const card = useRef<HTMLElement>(null);
+  const count = rows.length;
+  // Where keyboard focus goes once the row list has changed: the new row's item box after
+  // Add, the next row (or the Add button when there is none) after Delete.
+  const focusNext = useRef<{ after: 'add' } | { after: 'delete'; index: number } | null>(null);
+  useEffect(() => {
+    const next = focusNext.current;
+    focusNext.current = null;
+    if (!next || !card.current) return;
+    const items = card.current.querySelectorAll<HTMLLIElement>('ol.rows > li');
+    if (next.after === 'add') {
+      items[items.length - 1]?.querySelector<HTMLInputElement>('input[role="combobox"]')?.focus();
+    } else {
+      const row = items[next.index];
+      if (row) row.querySelector<HTMLInputElement>('input:not(:disabled)')?.focus();
+      else card.current.querySelector<HTMLButtonElement>('button.add-row')?.focus();
+    }
+  }, [count]);
+
   return (
-    <section className={`card zone zone-${zone}`} aria-labelledby={headingId}>
+    <section ref={card} className={`card zone zone-${zone}`} aria-labelledby={headingId}>
       <header className="zone-header">
         <h2 id={headingId}>{ZONE_NAMES[zone]}</h2>
         <p className="zone-subtotal">
@@ -82,12 +101,20 @@ export function ZoneCard({ zone, rows, results, subtotal, contingencyLabel, orie
               res={res}
               contingencyLabel={contingencyLabel}
               dispatch={dispatch}
+              onDeleted={() => (focusNext.current = { after: 'delete', index: i })}
             />
           ) : null;
         })}
       </ol>
 
-      <button type="button" className="button add-row" onClick={() => dispatch({ type: 'row/add', zone })}>
+      <button
+        type="button"
+        className="button add-row"
+        onClick={() => {
+          focusNext.current = { after: 'add' };
+          dispatch({ type: 'row/add', zone });
+        }}
+      >
         + Add row to {ZONE_NAMES[zone]}
       </button>
     </section>
@@ -102,9 +129,11 @@ interface RowEditorProps {
   res: RowResult;
   contingencyLabel: string;
   dispatch: Dispatch<EditorAction>;
+  /** Called when the row is being deleted, so the card can move focus. */
+  onDeleted: () => void;
 }
 
-function RowEditor({ zone, index, count, row, res, contingencyLabel, dispatch }: RowEditorProps) {
+function RowEditor({ zone, index, count, row, res, contingencyLabel, dispatch, onDeleted }: RowEditorProps) {
   const n = index + 1;
   const label = `${ZONE_NAMES[zone]} row ${n}`;
   const snap = row.snapshot;
@@ -126,6 +155,7 @@ function RowEditor({ zone, index, count, row, res, contingencyLabel, dispatch }:
 
   const remove = () => {
     if ((row.item || row.note) && !window.confirm(`Delete ${label}${row.note ? ` (${row.note})` : ''}?`)) return;
+    onDeleted();
     dispatch({ type: 'row/delete', zone, index });
   };
 

@@ -17,7 +17,29 @@ export interface RecentFile<H = FileSystemFileHandle> {
 /** Same file on disk? Real handles compare with isSameEntry. */
 export type SameFile<H> = (a: H, b: H) => Promise<boolean>;
 
-export const sameHandle: SameFile<FileSystemFileHandle> = (a, b) => a.isSameEntry(b);
+// async, so a throw from isSameEntry (not a function on a damaged stored entry, or a
+// DOMException) becomes a rejected promise the callers handle.
+export const sameHandle: SameFile<FileSystemFileHandle> = async (a, b) => a.isSameEntry(b);
+
+/** A comparison that fails counts as "different file", however it fails (throw or rejection). */
+async function isSame<H>(same: SameFile<H>, a: H, b: H): Promise<boolean> {
+  try {
+    return await same(a, b);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Updates read the list, change it and write it back. Two at once would lose one update,
+ * so they run one after another per store.
+ */
+const queues = new WeakMap<KeyValueStore, Promise<unknown>>();
+function serialised<T>(store: KeyValueStore, task: () => Promise<T>): Promise<T> {
+  const run = (queues.get(store) ?? Promise.resolve()).then(task, task);
+  queues.set(store, run.catch(() => undefined));
+  return run;
+}
 
 export async function listRecent<H = FileSystemFileHandle>(store: KeyValueStore): Promise<RecentFile<H>[]> {
   const raw = await store.get(KEY);
@@ -29,26 +51,30 @@ export async function listRecent<H = FileSystemFileHandle>(store: KeyValueStore)
 }
 
 /** Put a file at the top of the list, removing any older entry for the same file. */
-export async function addRecent<H>(
+export function addRecent<H>(
   store: KeyValueStore,
   handle: H & { name: string },
   same: SameFile<H>,
   now = Date.now(),
 ): Promise<RecentFile<H>[]> {
-  const others: RecentFile<H>[] = [];
-  for (const r of await listRecent<H>(store)) {
-    if (!(await same(r.handle, handle).catch(() => false))) others.push(r);
-  }
-  const next = [{ name: handle.name, usedAt: now, handle }, ...others].slice(0, MAX_RECENT);
-  await store.set(KEY, next);
-  return next;
+  return serialised(store, async () => {
+    const others: RecentFile<H>[] = [];
+    for (const r of await listRecent<H>(store)) {
+      if (!(await isSame(same, r.handle, handle))) others.push(r);
+    }
+    const next = [{ name: handle.name, usedAt: now, handle }, ...others].slice(0, MAX_RECENT);
+    await store.set(KEY, next);
+    return next;
+  });
 }
 
-export async function removeRecent<H>(store: KeyValueStore, handle: H, same: SameFile<H>): Promise<RecentFile<H>[]> {
-  const kept: RecentFile<H>[] = [];
-  for (const r of await listRecent<H>(store)) {
-    if (!(await same(r.handle, handle).catch(() => false))) kept.push(r);
-  }
-  await store.set(KEY, kept);
-  return kept;
+export function removeRecent<H>(store: KeyValueStore, handle: H, same: SameFile<H>): Promise<RecentFile<H>[]> {
+  return serialised(store, async () => {
+    const kept: RecentFile<H>[] = [];
+    for (const r of await listRecent<H>(store)) {
+      if (!(await isSame(same, r.handle, handle))) kept.push(r);
+    }
+    await store.set(KEY, kept);
+    return kept;
+  });
 }

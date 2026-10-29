@@ -4,6 +4,7 @@
 import { writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { ballroom, librarySpecVersion, openFile, start } from './helpers';
+import { pagesWithWatermark, pdfPageCount, textOperationsPerPage } from './pdf';
 
 test.skip(({ browserName }) => browserName !== 'chromium', 'PDF printing is Chromium-only in Playwright');
 
@@ -52,6 +53,7 @@ test('the Ballroom Load Sheet prints on exactly one A4 page', async ({ page }) =
   await page.getByRole('button', { name: 'Load example' }).click();
   const pdf = await printToPdf(page, 'ballroom.pdf');
   expect(pdfPages(pdf)).toBe(1);
+  expect(pagesWithWatermark(pdf)).toEqual([true]);
   // The Ballroom fits close to full size (about 94%: 8 pt text prints at about 7.5 pt).
   expect(await expectNothingClipped(page)).toBeGreaterThanOrEqual(0.9);
 
@@ -99,6 +101,21 @@ test('a 30-row hang still prints on one page', async ({ page }) => {
   expect(await expectNothingClipped(page)).toBeGreaterThanOrEqual(0.72);
 });
 
+test('long unbroken Job and Venue names wrap inside their cells', async ({ page }) => {
+  await start(page);
+  const f = structuredClone(ballroom);
+  f.job.name = 'LongUnbrokenJobName'.repeat(8);
+  f.job.venue = 'VenueWithoutAnySpaces'.repeat(8);
+  await openFile(page, 'long.loadsheet.json', JSON.stringify(f));
+  await page.emulateMedia({ media: 'print' });
+  const overflowing = await page.evaluate(
+    () => [...document.querySelectorAll<HTMLElement>('.ls-header td')].filter((td) => td.scrollWidth > td.clientWidth + 1).length,
+  );
+  expect(overflowing, 'header cells whose text runs outside them').toBe(0);
+  expect(pdfPages(await printToPdf(page, 'long-names.pdf'))).toBe(1);
+  await expectNothingClipped(page);
+});
+
 test('approved: no watermark; stated capacity, body up and top rigging not included are printed', async ({ page }) => {
   await start(page);
   const f = structuredClone(ballroom);
@@ -121,3 +138,58 @@ test('approved: no watermark; stated capacity, body up and top rigging not inclu
   expect(pdfPages(await page.pdf({ preferCSSPageSize: true, printBackground: true }))).toBe(1);
   await expectNothingClipped(page);
 });
+
+// Below the smallest readable scale (72%) the sheet runs onto more pages. It must not leave a
+// blank page (the scaled content is not as tall as its unscaled layout), the footer must stay on
+// a page, and every page of a draft must carry the DRAFT mark. The checks read the PDF itself
+// (e2e/pdf.ts) rather than repeat the app's arithmetic. 90 rows is where the unscaled layout
+// needs one page more than the scaled sheet, which is what used to leave a blank page; 120 rows
+// is where keeping rows and blocks whole pushes content onto one page more than the height
+// alone suggests.
+for (const rowCount of [60, 90, 120]) {
+  test(`a ${rowCount}-row hang runs onto more pages without a blank page; every page has DRAFT and the footer is last`, async ({ page }) => {
+    await start(page);
+    const big = structuredClone(ballroom);
+    const zones = big.hangs[0]!.zones;
+    const fill = (zone: string, count: number) => {
+      const rows = zones[zone]!;
+      while (rows.length < count) rows.push({ ...structuredClone(rows[rows.length - 1]!) });
+    };
+    const scale = rowCount / 60;
+    fill('top_rigging', Math.round(6 * scale));
+    fill('hoist', Math.round(12 * scale));
+    fill('hook', Math.round(6 * scale));
+    fill('path1', Math.round(24 * scale));
+    fill('path2', Math.round(12 * scale));
+    expect(Object.values(zones).reduce((n, rows) => n + rows.length, 0)).toBe(rowCount);
+    await openFile(page, 'big.loadsheet.json', JSON.stringify(big));
+    await expect(page.getByText('too many rows to print')).toBeVisible();
+
+    await page.emulateMedia({ media: 'print' });
+    const m = await page.evaluate(() => {
+      const mm = 96 / 25.4;
+      const sheetEl = document.querySelector('.ls-page')!.getBoundingClientRect();
+      const f = document.querySelector('.ls-footer')!.getBoundingClientRect();
+      const content = document.querySelector('.ls-content')!.getBoundingClientRect();
+      return {
+        sheetMm: sheetEl.height / mm,
+        contentMm: content.height / mm, // the scaled content, as drawn
+        footerBottomMm: (f.bottom - sheetEl.top) / mm,
+        watermark: getComputedStyle(document.querySelector('.ls-watermark')!).position,
+      };
+    });
+    // The page is as tall as the scaled content, and the footer (the last thing) is inside it.
+    expect(Math.abs(m.sheetMm - m.contentMm)).toBeLessThan(1);
+    expect(m.footerBottomMm).toBeLessThanOrEqual(m.sheetMm + 0.5);
+    // The mark is fixed, which is what makes the browser repeat it on every page.
+    expect(m.watermark).toBe('fixed');
+
+    const pdf = await printToPdf(page, `${rowCount}-rows.pdf`);
+    const pages = pdfPageCount(pdf);
+    expect(pages).toBe(pdfPages(pdf));
+    expect(pages).toBeGreaterThanOrEqual(2);
+    expect(pagesWithWatermark(pdf), 'DRAFT on every page').toEqual(Array<boolean>(pages).fill(true));
+    // No page is blank (the watermark alone is one text operation at most).
+    for (const [i, n] of textOperationsPerPage(pdf).entries()) expect(n, `page ${i + 1} has content`).toBeGreaterThan(10);
+  });
+}

@@ -77,6 +77,10 @@ export function LoadSheet({ show, hang, result: r, contingencyLabel, footer, onO
   const content = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [overflow, setOverflow] = useState(false);
+  // Only when the sheet runs onto more pages: the height of the scaled content in px.
+  // A transform does not change layout height, so without this the page would stay as tall
+  // as the unscaled content and leave a blank trailing page.
+  const [scaledHeight, setScaledHeight] = useState<number | null>(null);
   // Re-measured whenever the content changes, and on resize (e.g. late font loading).
   useLayoutEffect(() => {
     const el = content.current;
@@ -84,8 +88,10 @@ export function LoadSheet({ show, hang, result: r, contingencyLabel, footer, onO
     // offsetHeight is the unscaled layout height: transforms do not change it.
     const measure = () => {
       const needed = Math.min(1, PAGE_H_MM / (el.offsetHeight / PX_PER_MM));
-      setScale(Math.max(MIN_SCALE, Math.floor(needed * 1000) / 1000));
+      const used = Math.max(MIN_SCALE, Math.floor(needed * 1000) / 1000);
+      setScale(used);
       setOverflow(needed < MIN_SCALE);
+      setScaledHeight(needed < MIN_SCALE ? Math.floor(el.offsetHeight * used) : null);
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -96,8 +102,14 @@ export function LoadSheet({ show, hang, result: r, contingencyLabel, footer, onO
   useEffect(() => onOverflow?.(overflow), [overflow, onOverflow]);
 
   return (
-    <div className={`ls-page${overflow ? ' ls-page-overflow' : ''}`} data-testid="load-sheet">
+    <div
+      className={`ls-page${overflow ? ' ls-page-overflow' : ''}`}
+      style={overflow && scaledHeight !== null ? { height: `${scaledHeight}px` } : undefined}
+      data-testid="load-sheet"
+    >
       {job.status === 'draft' ? (
+        // Fixed when printing, so the browser repeats it on every page however many there are
+        // (see print.css); the page count is decided by the browser, not by us.
         <div className="ls-watermark" aria-hidden="true">
           DRAFT
         </div>
