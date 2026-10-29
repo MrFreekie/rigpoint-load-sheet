@@ -95,7 +95,7 @@ export function hasContent(show: EditorShow): boolean {
   );
 }
 
-// The editor works on the first hang. The file format allows more (BRIEF.md 6, "one hang per calculation").
+// The editor works on the first hang. The file format allows more, but one calculation is for one hang.
 const HANG = 0;
 
 export function currentHang(show: EditorShow): EditorHang {
@@ -146,7 +146,7 @@ export function editorReducer(show: EditorShow, action: EditorAction): EditorSho
     case 'row/item':
       return updateRow(show, action.zone, action.index, (r) => {
         if (action.item === null) return { ...r, item: null, snapshot: null };
-        // Snapshot the library values now, so the show stays self-contained (BRIEF.md 7.2).
+        // Snapshot the library values now, so the show stays self-contained.
         const snapshot = snapshotOf(action.item);
         return {
           ...r,

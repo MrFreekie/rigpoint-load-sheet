@@ -1,4 +1,4 @@
-// Fixed text produced by the engine. Wording follows the workbook and BRIEF.md sections 6 and 9.5.
+// Fixed text produced by the engine. Wording follows the workbook.
 
 import type { PointStatus, WarningCode } from './types';
 

@@ -1,5 +1,5 @@
 // The open document: the show being edited plus what the app knows about its file.
-// Wraps the editor reducer with the approval lock (BRIEF.md 8.5) and saved/unsaved tracking.
+// Wraps the editor reducer with the approval lock and saved/unsaved tracking.
 
 import { applyLibraryUpdates } from '../files/compare';
 import { contentFingerprint } from '../files/show-io';

@@ -1,4 +1,4 @@
-// Read-only, searchable view of the Spec library (BRIEF.md 9.6).
+// Read-only, searchable view of the Spec library.
 
 import { useId, useMemo, useState } from 'react';
 import { library } from '../library';

@@ -1,4 +1,4 @@
-// Recent files (BRIEF.md 8.1, layer 2): file handles kept in IndexedDB so a show can be
+// Recent files (layer 2): file handles kept in IndexedDB so a show can be
 // reopened, and saved in place, without browsing for it again. Permission is asked for
 // again on reuse.
 

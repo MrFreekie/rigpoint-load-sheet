@@ -7,7 +7,7 @@ import { defineConfig } from 'vitest/config';
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
 
 /**
- * Strict Content Security Policy for the built app (BRIEF.md section 12).
+ * Strict Content Security Policy for the built app: no third-party calls, no form posts.
  * Added at build time only: the dev server needs an inline script for hot reload.
  */
 const CSP = [

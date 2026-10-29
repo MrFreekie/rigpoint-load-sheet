@@ -1,4 +1,4 @@
-// Display formatting (BRIEF.md 6.9). Rounding happens here, never in the engine.
+// Display formatting. Rounding happens here, never in the engine.
 
 import type { Light, Per } from '../engine/types';
 
@@ -44,7 +44,7 @@ export function contingencyToPercent(fraction: number): number {
 /**
  * File name: "<Job> - <Hang>.loadsheet.json" with characters illegal in file names removed.
  * A revision, when there is one, is added ("… - Rev B.loadsheet.json") so each revision
- * is saved under its own name and the earlier file stays untouched (BRIEF.md 8.5).
+ * is saved under its own name and the earlier file stays untouched.
  */
 export function showFileName(job: string, hang: string, revision = ''): string {
   const clean = (s: string) =>

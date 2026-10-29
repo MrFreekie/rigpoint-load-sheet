@@ -1,4 +1,4 @@
-// Show-file format migrations (BRIEF.md 7.2). Old files are upgraded on open, never rejected.
+// Show-file format migrations. Old files are upgraded on open, never rejected.
 //
 // To add a format version N+1: add a step to MIGRATIONS keyed by the version it upgrades FROM,
 // bump CURRENT_FORMAT in show-file.ts, and add a test in migrations.test.ts with a sample file.

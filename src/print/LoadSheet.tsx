@@ -1,4 +1,4 @@
-// The Load Sheet: the formal one-page A4 document (BRIEF.md section 10).
+// The Load Sheet: the formal one-page A4 document.
 // Laid out like the workbook's "Load Sheet" tab. Displays engine results; computes nothing.
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
