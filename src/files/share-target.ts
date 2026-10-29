@@ -1,4 +1,4 @@
-// Android "share to" (manifest share_target, BRIEF.md 8.6). The service worker receives the
+// Android "share to" (manifest share_target). The service worker receives the
 // shared file, parks it in a cache, and sends the app to ?shared=1; the app then opens it.
 
 import { SHARE_CACHE, SHARE_KEY, SHARE_NAME_HEADER, SHARE_PARAM } from './share-constants';

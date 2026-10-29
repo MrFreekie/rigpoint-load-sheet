@@ -1,4 +1,4 @@
-// Autosave (BRIEF.md 8.1, layer 3): a safety net in this browser only. The saved file is the record.
+// Autosave (layer 3): a safety net in this browser only. The saved file is the record.
 // One record holds the current show while it has unsaved changes; it is removed once saved.
 
 import { createStore, del, get, set, type UseStore } from 'idb-keyval';

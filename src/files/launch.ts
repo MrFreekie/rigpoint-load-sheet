@@ -1,4 +1,4 @@
-// Double-click to open (manifest file_handlers, BRIEF.md 8.6). When the installed app is
+// Double-click to open (manifest file_handlers). When the installed app is
 // launched with a show file, Chrome and Edge desktop pass its handle through launchQueue.
 // Elsewhere launchQueue does not exist and this does nothing.
 

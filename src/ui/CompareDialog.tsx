@@ -1,4 +1,4 @@
-// Compare-on-open (BRIEF.md 8.4). Nothing changes unless the user chooses "Update selected".
+// Compare-on-open. Nothing changes unless the user chooses "Update selected".
 
 import { useState } from 'react';
 import type { Comparison, FieldChange, ItemComparison } from '../files/compare';

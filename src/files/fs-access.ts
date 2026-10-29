@@ -1,4 +1,4 @@
-// Layer 2 (BRIEF.md 8.1): save in place with the File System Access API, on Chrome and
+// Layer 2: save in place with the File System Access API, on Chrome and
 // Edge desktop. Detected at runtime by feature, never by user agent. Where it is missing,
 // the app falls back to layer 1 (file input and download).
 

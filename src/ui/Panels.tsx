@@ -1,4 +1,4 @@
-// Job and hang panels (BRIEF.md 9.2 and 9.3).
+// Job and hang panels.
 
 import type { Dispatch } from 'react';
 import { WARNING_MESSAGES } from '../engine/messages';

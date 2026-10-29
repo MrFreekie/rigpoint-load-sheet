@@ -1,4 +1,4 @@
-// Layer 1 (BRIEF.md 8.1): open with a file input and save by downloading. Works in every browser.
+// Layer 1: open with a file input and save by downloading. Works in every browser.
 
 import { MAX_FILE_BYTES } from './show-io';
 

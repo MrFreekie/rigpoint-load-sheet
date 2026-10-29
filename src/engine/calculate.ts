@@ -1,4 +1,4 @@
-// Static load-path calculation for one hang. See BRIEF.md section 6 and
+// Static load-path calculation for one hang. See
 // reference/engine_reference.py. Pure: values in, values out. Never rounds.
 
 import {
@@ -120,7 +120,7 @@ export function calculate(hang: Hang, contingency: number): HangResult {
   const belowHook = subtotals.path1 + subtotals.path2;
   const bodyUp = hang.hoist_orientation === 'body_up';
 
-  // Carried load for each rated row (BRIEF.md 6.3).
+  // Carried load for each rated row.
   const checks: Check[] = [];
   for (const zone of ZONES) {
     const zoneRows = rows[zone];
@@ -181,7 +181,7 @@ export function calculate(hang: Hang, contingency: number): HangResult {
     ? `${overall.item ?? overall.note ?? ''}${tieSuffix(overall.ties)}`
     : NO_RATED_ITEMS;
 
-  // Connection point (BRIEF.md 6.6). Not part of the equipment governing component.
+  // Connection point. Not part of the equipment governing component.
   const cap = hang.point_capacity.kg;
   let pointStatus: PointStatus;
   let pointUsed: number | null = null;

@@ -1,4 +1,4 @@
-// Offline readiness and "Update available – reload" (BRIEF.md 11). A new version waits
+// Offline readiness and "Update available – reload". A new version waits
 // until the user chooses to reload; it never replaces the app in the middle of an edit.
 
 import { useEffect } from 'react';

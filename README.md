@@ -18,6 +18,8 @@ You list everything on one hang, from the connection point down: top rigging, ho
 
 All weights are in kilograms. Ratings are used exactly as the manufacturer states them, with no extra factors.
 
+The **Theme** button switches between Auto (follows your device), Day and Night. It is remembered on that device and does not change the printed sheet.
+
 ## Getting started
 
 1. Open https://mrfreekie.github.io/rigpoint-load-sheet/
@@ -38,7 +40,7 @@ Once you have opened the app once, it works offline, installed or not. On a comp
 - **Recent** reopens the show files you used last.
 - Double-click a show file to open it in the app.
 
-On Android you can share a show file from email or chat straight into the app.
+On Android, once the app is installed, you can share a show file from email or chat straight into it.
 
 When there is a new version, the app shows **Update available – reload**. Press **Reload** when it suits you; unsaved changes are kept and offered back.
 

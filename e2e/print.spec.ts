@@ -1,4 +1,4 @@
-// Phase 4: the Load Sheet prints on exactly one A4 page (BRIEF.md 10 and 13.2).
+// Phase 4: the Load Sheet prints on exactly one A4 page.
 // PDF output is a Chromium feature in Playwright, so these run in Chromium only.
 
 import { writeFileSync } from 'node:fs';

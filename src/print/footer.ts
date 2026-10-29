@@ -1,7 +1,7 @@
 import { isoWithOffset } from '../files/show-io';
 import { formatDate } from '../ui/format';
 
-/** Footer on every print: makes the printout traceable to the code, data and file (BRIEF.md 10.10). */
+/** Footer on every print: makes the printout traceable to the code, data and file. */
 export function printFooter(opts: {
   appVersion: string;
   showSpec: string;

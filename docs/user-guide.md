@@ -18,10 +18,12 @@ Everything happens on your own device. Nothing is sent anywhere, there is no acc
 8. [Printing the Load Sheet](#printing-the-load-sheet)
 9. [Installing the app and working offline](#installing-the-app-and-working-offline)
 10. [Updates](#updates)
-11. [Using it on a phone](#using-it-on-a-phone)
-12. [Equipment that is not in the list](#equipment-that-is-not-in-the-list)
-13. [Problems and questions](#problems-and-questions)
-14. [Words used in the app](#words-used-in-the-app)
+11. [Colour theme](#colour-theme)
+12. [Using it on a phone](#using-it-on-a-phone)
+13. [Equipment that is not in the list](#equipment-that-is-not-in-the-list)
+14. [Problems and questions](#problems-and-questions)
+15. [What the app does not check](#what-the-app-does-not-check)
+16. [Words used in the app](#words-used-in-the-app)
 
 ## The idea in one minute
 
@@ -79,7 +81,7 @@ To make your own:
 | Designer | Who designed the system |
 | Venue | Where it is |
 | Status | Draft, Issued, Approved or Superseded. See [Issuing, approving and revising](#issuing-approving-and-revising) |
-| Revision | Leave blank for the first issue. The app fills it in (A, B, C) when you make a new revision |
+| Revision | The first issue has no revision letter, so leave it blank. The next is Rev A, then Rev B. The app fills it in when you make a new revision |
 | Sheet Date | The date on the printed sheet. Leave it blank to print a line you can write on |
 | Contingency | 5% unless you have a reason to change it. It covers unlisted items and measurement error, and is not a safety factor |
 
@@ -128,6 +130,20 @@ Delete a row with the ✕ button.
 - For rated items: the **carried load** (including contingency), the **used** percentage, and a traffic light.
 
 Items without a rating (cabinets, cable) add weight but are not checked themselves.
+
+### Number limits
+
+The app stops numbers that are far beyond any real rig, so a typing slip cannot break the totals. If you go over, the box shows a message such as "Must be 9,999 or less". The limits are:
+
+| Number | Limit |
+|---|---|
+| Qty on a row | 9,999 |
+| Length on a row | 1,000 m |
+| Weight of one item | 100,000 kg |
+| SWL of one item | 1,000,000 kg |
+| Stated point capacity | 1,000,000 kg |
+
+A show file with a number over a limit will not open, and the app says which one.
 
 ### Flags on a row
 
@@ -199,7 +215,7 @@ The header shows **● Unsaved changes** while you have changes that are not in 
 
 - **Save As** asks where to save the file. After that, **Save** updates that same file each time.
 - **Open** lets you pick a show file. Saving then updates the file you opened.
-- **Recent** lists the last few show files you used, so you can reopen one in a click. The browser may ask you to allow access to the file again. Say yes.
+- **Recent** lists the last few show files you used, so you can reopen one in a click. The browser may ask you to allow access to the file again. Say yes. The **Recent** button only appears in Chrome and Edge on a computer, and only once you have used a file.
 
 ### In other browsers and on phones
 
@@ -234,7 +250,7 @@ Use **Status** to show where the sheet is in its life:
 | Draft | Still being worked on. The print carries a faint DRAFT watermark |
 | Issued | Sent out |
 | Approved | Signed off. The show becomes read-only |
-| Superseded | Replaced by a later revision. Read-only |
+| Superseded | Replaced by a later revision. Read-only. You set this by hand: the app does not change an old revision to Superseded when you make a new one |
 
 An **Approved** or **Superseded** show opens read-only, with a banner explaining why. You cannot change it by accident.
 
@@ -274,7 +290,7 @@ Once installed, you can **double-click a show file** to open it in the app. If W
 
 Open the site, then the ⋮ menu, then **Add to home screen** or **Install app**.
 
-Once installed, you can open a show file from email, WhatsApp or a file manager: tap **Share** on the file and choose **Load Sheet** from the list of apps.
+Sharing a show file into the app only works once the app is installed. Then you can open a show file from email, WhatsApp or a file manager: tap **Share** on the file and choose **Load Sheet** from the list of apps.
 
 ### On an iPhone or iPad (Safari)
 
@@ -296,9 +312,19 @@ If you ignore the banner, the new version is used the next time you fully close 
 
 The app and equipment list versions are shown in small type at the top of the screen, under the buttons, and on the footer of every print.
 
+## Colour theme
+
+The **Theme** button in the header changes how the screen looks. Each press moves to the next choice:
+
+1. **Auto** follows your device, light or dark.
+2. **Day** is always light.
+3. **Night** is always dark.
+
+After Night it goes back to Auto. The button always shows the current choice. The app remembers it on that device and browser. If the browser will not store it (a private window, for example), it applies until you close the page. The theme never changes the printed Load Sheet.
+
 ## Using it on a phone
 
-The app works on a phone down to an iPhone SE screen size. The buttons are large enough to use with gloves.
+The app is laid out to work on small phone screens. The buttons are large enough to use with gloves.
 
 - The zone cards stack one above the other, in rig order.
 - The Summary panel is at the bottom. **Hide details** folds it away to save space.
@@ -307,7 +333,7 @@ The app works on a phone down to an iPhone SE screen size. The buttons are large
 
 ## Equipment that is not in the list
 
-You cannot add your own one-off items in the app. Every weight and rating comes from the equipment list (the Spec library), so that each figure has been checked by a second person. Press **Library** to see the full list, with weights, ratings, and notes on where each figure came from. Items with no recorded weight are highlighted as TBC.
+You cannot add your own one-off items in the app. Every weight and rating comes from the equipment list (shown in the app as the Spec library), so that each figure has been checked by a second person. Press **Library** to see the full list, with weights, ratings, and notes on where each figure came from. Items with no recorded weight are highlighted as TBC.
 
 If something you need is missing, or a figure looks wrong, tell the person who looks after the app. Send them the manufacturer's data sheet or certificate, or your own measurement. Once it has been checked and added, everyone gets it with the next update.
 
@@ -339,6 +365,12 @@ Close the app completely and open it again.
 **The printout runs onto two pages.**
 Check the print window is set to A4, portrait and no extra scaling.
 
+## What the app does not check
+
+The app checks one hang, as a list of static weights. It does not assess bridle geometry, sling angles, how load shares between points, the venue structure, or dynamic and shock loads. The full wording is in the small print on every Load Sheet and in [DISCLAIMER.md](../DISCLAIMER.md).
+
+It is a calculation aid. It does not replace assessment by a competent person.
+
 ## Words used in the app
 
 | Word | Meaning |
@@ -352,10 +384,4 @@ Check the print window is set to A4, portrait and no extra scaling.
 | Design load | The static load plus contingency |
 | Body down / Body up | Whether the hoist climbs its chain with the load (body down) or is fixed at the top (body up) |
 | TBC | No weight recorded in the equipment list yet |
-| Spec library | The equipment list the app takes every weight and rating from |
-
-## What the app does not check
-
-The app checks one hang, as a list of static weights. It does not assess bridle geometry, sling angles, how load shares between points, the venue structure, or dynamic and shock loads. The full wording is in the small print on every Load Sheet and in [DISCLAIMER.md](../DISCLAIMER.md).
-
-It is a calculation aid. It does not replace assessment by a competent person.
+| Equipment list | The list the app takes every weight and rating from. Some screens in the app call it the Spec library |

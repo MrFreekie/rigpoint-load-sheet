@@ -2,7 +2,7 @@
 
 Notes for anyone changing the code or the equipment list. If you only use the app, see the [user guide](user-guide.md) instead.
 
-The app was built from a build brief that the owner keeps privately. Code comments such as "BRIEF.md section 10" refer to sections of that brief; ask the owner if you need it. The workbook in `reference/` is the source of truth for the calculation: where it and the code disagree, ask before changing anything.
+The app was built from a build brief. `BRIEF.md` is no longer in the repository; the owner keeps a private copy. Any code comment that still cites it refers to that copy, so ask the owner if you need it. The workbook in `reference/` is the source of truth for the calculation: where it and the code disagree, ask before changing anything.
 
 ## Ground rules
 
@@ -14,6 +14,8 @@ The app was built from a build brief that the owner keeps privately. Code commen
 - The small print in `src/print/small-print.ts` and `DISCLAIMER.md` is fixed text.
 - No server, no accounts, no tracking and no third-party network calls. Keep the strict Content Security Policy in `vite.config.ts` as it is.
 - Every new dependency needs a reason in the pull request.
+- A second person reviews every library change before it is merged.
+- Merging to `main` releases the app. Only merge when the owner says so.
 
 ## Getting started
 
@@ -59,14 +61,19 @@ Then open http://localhost:4173/rigpoint-load-sheet/ in Chrome or Edge. Browsers
 |---|---|
 | `src/engine/` | Pure calculation: `calculate(hang, contingency)` |
 | `src/schema/` | Zod schemas for the Spec library and show files, with plain-English errors |
+| `src/schema/limits.ts` | Upper limits on numbers (quantity 9,999, length 1,000 m, item weight 100,000 kg, SWL and point capacity 1,000,000 kg). Show files over a limit are rejected, and the fields show "Must be … or less" |
 | `src/files/` | Open, save, save in place, recent files, autosave, migrations and compare-on-open |
 | `src/ui/` | React editing interface. It displays engine results and calculates nothing itself |
+| `src/ui/document.ts` | The open document: the editor plus the approval lock (Approved and Superseded open read-only) and saved/unsaved tracking |
+| `src/ui/theme.ts`, `src/ui/ThemeButton.tsx` | Auto / Day / Night colour theme, kept in `localStorage`. Never affects printing |
+| `src/ui/ErrorBoundary.tsx` | The "Something went wrong" screen shown instead of a blank page if drawing fails |
 | `src/print/` | The Load Sheet print view, its stylesheet and the fixed small print |
 | `src/sw.ts` | The service worker: offline precache and the Android share target |
 | `src/testing/` | Test helpers: fixture loading and seeded random hangs |
 | `e2e/` | Playwright end-to-end tests |
 | `data/spec-library.json` | The equipment list |
 | `fixtures/` | Test scenarios with expected results, and the Ballroom sample show file |
+| `fixtures/spec-library.workbook.json` | The frozen library the scenarios and the Python reference use. Never edit it; it is not the live library |
 | `reference/` | The workbook (the specification) and the Python reference engine |
 
 ## How the engine is tested
@@ -74,7 +81,7 @@ Then open http://localhost:4173/rigpoint-load-sheet/ in Chrome or Edge. Browsers
 - **Scenarios**: the nine cases in `fixtures/scenarios.json`, taken from the recalculated workbook.
 - **Unit tests**: LEN?, TBC, quantity 0, empty zones, note-only rows, items no longer in the library, contingency 0, ties, traffic lights, point capacity and rounding.
 - **Property test**: increasing any row's quantity never decreases any utilisation (500 random hangs).
-- **Differential test**: 400 random hangs built from the real library go through both the TypeScript engine and `reference/engine_reference.py`, and every value must match exactly.
+- **Differential test**: 400 random hangs built from the real library go through both the TypeScript engine and `reference/engine_reference.py`, and every number must match to within 1e-12 relative (the Python sum is compensated, so it is not bit for bit). Other values, such as the governing item and the data check, must match exactly.
 
 ## Show files
 

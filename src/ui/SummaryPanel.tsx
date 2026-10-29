@@ -1,4 +1,4 @@
-// Summary panel (BRIEF.md 9.5). Displays engine results; computes nothing itself.
+// Summary panel. Displays engine results; computes nothing itself.
 
 import { useState, type Dispatch } from 'react';
 import { NO_RATED_ITEM_IN_ZONE, tieSuffix } from '../engine/messages';

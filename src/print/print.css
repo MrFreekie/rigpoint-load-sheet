@@ -1,4 +1,4 @@
-/* Load Sheet print styles (BRIEF.md section 10).
+/* Load Sheet print styles.
    The sheet is styled in mm and pt with fixed black-on-white colours, so it prints the
    same whatever the screen theme. It is laid out off-screen at all times so it can be
    measured and scaled to one page, and only becomes visible when printing.

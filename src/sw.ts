@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-// Service worker (BRIEF.md 11): precaches the app shell and the bundled Spec library so the
+// Service worker: precaches the app shell and the bundled Spec library so the
 // app works with no network, waits for the user before updating, and receives show files
 // shared from Android (share_target). It never sends anything anywhere.
 

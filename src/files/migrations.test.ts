@@ -1,4 +1,4 @@
-// One test per show-file format version (BRIEF.md 7.2).
+// One test per show-file format version.
 
 import { describe, expect, it } from 'vitest';
 import ballroomJson from '../../fixtures/ballroom.loadsheet.json';
