@@ -1,7 +1,7 @@
 // Zod schema for show files (*.loadsheet.json, format "loadsheet/1").
 // Every opened file is untrusted: it is validated here before anything reads it.
 
-import { z } from 'zod';
+import { z } from './zod';
 import type { Hang, Row, Snapshot } from '../engine/types';
 import { MAX_ITEM_KG, MAX_LENGTH_M, MAX_POINT_KG, MAX_QTY, MAX_SWL_KG } from './limits';
 

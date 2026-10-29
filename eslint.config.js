@@ -18,6 +18,18 @@ export default tseslint.config(
     languageOptions: { globals: { ...globals.browser } },
   },
   {
+    // Zod comes through src/schema/zod.ts, which switches off its `new Function` probe that
+    // the Content Security Policy would report. (The engine block below has its own list.)
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
+    ignores: ['src/schema/zod.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { paths: [{ name: 'zod', message: "Import z from 'src/schema/zod' instead.", allowTypeImports: true }] },
+      ],
+    },
+  },
+  {
     // The engine must stay pure: values in, values out. No DOM, storage, network, clock,
     // randomness, framework or other-layer code. Node globals stay declared (flat config
     // merges globals), so the restricted lists below are what keeps them out.

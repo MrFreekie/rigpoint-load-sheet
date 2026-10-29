@@ -176,8 +176,77 @@ test('a show file shared from another app opens (Android share target)', async (
     return res.redirected ? res.url : `no redirect (${res.status})`;
   }, JSON.stringify(ballroom));
   expect(new URL(redirectedTo).search).toBe('?shared=1');
+  let asked = '';
+  page.removeAllListeners('dialog'); // start() accepts every dialog; answer this one here
+  page.once('dialog', (d) => {
+    asked = d.message();
+    void d.accept();
+  });
   await page.goto(redirectedTo);
   await expect(page.locator('.show-title')).toHaveText('The Ballroom – Main Hang Left');
+  expect(asked).toBe('A file was shared to the Load Sheet: "Shared Hang.loadsheet.json". Open it?');
   await expect(page.getByText('Opened Shared Hang.loadsheet.json.')).toBeVisible();
   expect(new URL(page.url()).search).toBe('');
+});
+
+test('a file posted from another website is refused, not opened', async ({ page, baseURL }) => {
+  await start(page);
+  await controlledByServiceWorker(page);
+  // A page on a different site submits a form to the share target: a cross-site navigation
+  // POST (Origin and referrer name the other site). The other site is served by Playwright.
+  const other = 'http://other-site.example/';
+  await page.route(`${other}**`, (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: `<form id="f" method="post" enctype="multipart/form-data" action="${new URL('share-target', baseURL).href}"><input type="file" name="show"></form>`,
+    }),
+  );
+  await page.goto(other);
+  await page.locator('input[type="file"]').setInputFiles({
+    name: 'Evil.loadsheet.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(ballroom)),
+  });
+  await page.locator('#f').evaluate((f) => (f as HTMLFormElement).submit());
+
+  // Back in the app with a notice, nothing opened and nothing parked.
+  await expect(page.getByRole('button', { name: 'Open', exact: true })).toBeVisible();
+  expect(new URL(page.url()).origin).toBe(new URL(baseURL!).origin);
+  await expect(page.getByText(/A file sent from a website was ignored/)).toBeVisible();
+  await expect(page.getByText(/Opened Evil/)).toHaveCount(0);
+  await expect(page.locator('.show-title')).not.toHaveText('The Ballroom – Main Hang Left');
+  const parked = await page.evaluate(async (key) => Boolean(await (await caches.open('rigpoint-share-target')).match(key)), 'shared-show');
+  expect(parked).toBe(false);
+});
+
+test('a file posted by a website that hides itself is not opened unless the user agrees', async ({ page, baseURL }) => {
+  await start(page);
+  await controlledByServiceWorker(page);
+  // With no referrer and Origin: null the service worker cannot tell this from a real share,
+  // so the app must ask. Declining leaves the current show alone.
+  const other = 'http://other-site.example/';
+  await page.route(`${other}**`, (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: `<meta name="referrer" content="no-referrer"><form id="f" method="post" enctype="multipart/form-data" action="${new URL('share-target', baseURL).href}"><input type="file" name="show"></form>`,
+    }),
+  );
+  await page.goto(other);
+  await page.locator('input[type="file"]').setInputFiles({
+    name: 'Hidden.loadsheet.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(ballroom)),
+  });
+  let asked = '';
+  page.removeAllListeners('dialog'); // start() accepts every dialog; answer this one here
+  page.once('dialog', (d) => {
+    asked = d.message();
+    void d.dismiss();
+  });
+  await page.locator('#f').evaluate((f) => (f as HTMLFormElement).submit());
+
+  await expect(page.getByRole('button', { name: 'Open', exact: true })).toBeVisible();
+  await expect.poll(() => asked).toContain('"Hidden.loadsheet.json"');
+  await expect(page.getByText(/Opened Hidden/)).toHaveCount(0);
+  await expect(page.locator('.show-title')).not.toHaveText('The Ballroom – Main Hang Left');
 });

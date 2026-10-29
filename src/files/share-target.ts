@@ -18,6 +18,7 @@ export async function takeSharedFile(): Promise<SharedFile | null> {
 
   if (marker === 'too-large') return { error: 'The shared file is too large to be a show file.' };
   if (marker === 'none') return { error: 'Nothing was shared: no file arrived with the share.' };
+  if (marker === 'refused') return { error: 'A file sent from a website was ignored. Share show files from your device, or use Open.' };
   if (!('caches' in window)) return { error: 'This browser cannot receive shared files.' };
   const cache = await caches.open(SHARE_CACHE);
   const response = await cache.match(SHARE_KEY);

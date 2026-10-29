@@ -6,6 +6,11 @@
 //   3. $GITHUB_EVENT_BEFORE on a push
 //   4. HEAD~1
 // If no base can be found (e.g. the first commit) the check is skipped with a note.
+//
+// Every commit since the base that changed the file is also checked against its parent,
+// so a push or pull request of several commits cannot hide one that forgot to move the
+// version. Merge commits are skipped: their changes come from commits checked elsewhere,
+// and the overall comparison still covers the result.
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -65,6 +70,34 @@ try {
 } catch {
   console.log(`spec_version check: ${FILE} is new since ${base}.`);
   process.exit(0);
+}
+
+const failures = [];
+// Commits already on main were checked when they landed (one early commit predates this
+// check), so only the commits this branch adds are looked at one by one.
+const notOnMain = resolves('origin/main') ? ['--not', 'origin/main'] : [];
+const commits = git('rev-list', '--reverse', '--no-merges', `${base}..HEAD`, ...notOnMain, '--', FILE)
+  .split('\n')
+  .filter(Boolean);
+for (const commit of commits) {
+  let parent;
+  try {
+    parent = git('show', `${commit}^:${FILE}`);
+  } catch {
+    continue; // the file is new in this commit
+  }
+  const own = git('show', `${commit}:${FILE}`);
+  if (parent === own) continue;
+  const was = JSON.parse(parent).spec_version;
+  const now = JSON.parse(own).spec_version;
+  if (!isNewer(now, was)) failures.push(`${commit.slice(0, 7)} (was ${was}, now ${now})`);
+}
+if (failures.length > 0) {
+  console.error(
+    `These commits changed ${FILE} without moving spec_version forward: ${failures.join('; ')}. ` +
+      `Every commit that changes the library needs a newer spec_version.`,
+  );
+  process.exit(1);
 }
 
 const after = readFileSync(FILE, 'utf8');
