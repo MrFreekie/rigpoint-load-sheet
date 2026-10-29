@@ -6,6 +6,7 @@
 import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching';
 import { NavigationRoute, registerRoute } from 'workbox-routing';
 import { MAX_FILE_BYTES } from './files/limits';
+import { isShareFromOs } from './files/share-guard';
 import { SHARE_ACTION, SHARE_CACHE, SHARE_FIELD, SHARE_KEY, SHARE_NAME_HEADER, SHARE_PARAM } from './files/share-constants';
 
 declare const self: ServiceWorkerGlobalScope & { __WB_MANIFEST: (string | { url: string; revision: string | null })[] };
@@ -23,6 +24,8 @@ self.addEventListener('fetch', (event) => {
 
 async function receiveShare(request: Request): Promise<Response> {
   const back = (marker: string) => Response.redirect(new URL(`./?${SHARE_PARAM}=${marker}`, scope).href, 303);
+  // Nothing is read or parked unless the OS share sheet sent it (see share-guard.ts).
+  if (!isShareFromOs(request, self.location.origin)) return back('refused');
   let file: FormDataEntryValue | null;
   try {
     file = (await request.formData()).get(SHARE_FIELD);

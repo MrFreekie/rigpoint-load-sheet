@@ -1,6 +1,6 @@
 // Zod schema for data/spec-library.json (format "loadsheet-spec/1").
 
-import { z } from 'zod';
+import { z } from './zod';
 import type { Snapshot } from '../engine/types';
 
 export const SPEC_FORMAT = 'loadsheet-spec/1';

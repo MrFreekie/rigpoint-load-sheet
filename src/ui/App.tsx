@@ -267,7 +267,9 @@ export function App() {
       .then((shared) => {
         if (!shared) return;
         if ('error' in shared) setFileError({ title: 'Could not open the shared file', message: shared.error, details: [], unchanged: true });
-        else startup.current.openText(shared.text, shared.name, null);
+        // Any website can post a file to the share route, so never open one unasked.
+        else if (window.confirm(`A file was shared to the Load Sheet: "${shared.name}". Open it?`))
+          startup.current.openText(shared.text, shared.name, null);
       })
       .catch(() => undefined);
   }, []);
